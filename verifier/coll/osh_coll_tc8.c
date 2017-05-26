@@ -33,7 +33,7 @@ int osh_coll_tc8(const TE_NODE *node, int argc, const char *argv[])
   UNREFERENCED_PARAMETER(argc);
   UNREFERENCED_PARAMETER(argv);
 
-  numprocs = _num_pes();
+  numprocs = shmem_n_pes();
 
   source = NULL;
   target = NULL;
@@ -45,14 +45,14 @@ int osh_coll_tc8(const TE_NODE *node, int argc, const char *argv[])
     return TC_SETUP_FAIL;
   }
 
-  source = shmalloc(sizeof(int32_t) * numprocs);
+  source = shmem_malloc(sizeof(int32_t) * numprocs);
   for (ii = 0; ii < numprocs; ii++)
     source[ii] = ii;
-  target = shmalloc(sizeof(int32_t) * (numprocs * (numprocs / 2)));
+  target = shmem_malloc(sizeof(int32_t) * (numprocs * (numprocs / 2)));
   for (ii = 0; ii < (numprocs * numprocs / 2); ii++)
     target[ii] = 0;
 
-  pSync = shmalloc(sizeof(long) *_SHMEM_COLLECT_SYNC_SIZE);
+  pSync = shmem_malloc(sizeof(long) *_SHMEM_COLLECT_SYNC_SIZE);
   for (ii=0; ii < _SHMEM_COLLECT_SYNC_SIZE; ii++)
     pSync[ii] = _SHMEM_SYNC_VALUE;
 
@@ -60,11 +60,11 @@ int osh_coll_tc8(const TE_NODE *node, int argc, const char *argv[])
 
   /* Fcollect function				*/
 
-  if (_my_pe()%2 == 1)
+  if (shmem_my_pe()%2 == 1)
     shmem_fcollect32( target, source, numprocs, 1, 1,
                     (numprocs / 2), pSync );
 
-  if (_my_pe()%2 == 1)
+  if (shmem_my_pe()%2 == 1)
     for (ii = 0; ii < (numprocs * (numprocs / 2)); ii++)
     {
       kk = ( ii % (numprocs) ? kk + 1 : 0);
@@ -76,9 +76,9 @@ int osh_coll_tc8(const TE_NODE *node, int argc, const char *argv[])
     }
 
   /* Finalizes					*/
-  shfree(source);
-  shfree(target);
-  shfree(pSync);
+  shmem_free(source);
+  shmem_free(target);
+  shmem_free(pSync);
 
   return rc;
 }

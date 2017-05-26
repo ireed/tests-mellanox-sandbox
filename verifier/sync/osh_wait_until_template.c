@@ -17,7 +17,7 @@
         if (buf[0] != putval || buf[0] == old_val) \
         { \
             log_fatal(OSH_TC, "Cond %d failed on val=%d buf[0]=%d\n", cond, val, buf[0]); \
-            shfree(buf); \
+            shmem_free(buf); \
             return TC_FAIL; \
         } \
     }  while (0)
@@ -31,13 +31,13 @@ static int TEST_NAME(void)
     TYPE val, putval;
     TYPE *buf;
     
-    num_proc = _num_pes();
-    my_proc = _my_pe();
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
     peer = (my_proc + 1) % num_proc;
-    buf = (TYPE *)shmalloc(sizeof(TYPE));
+    buf = (TYPE *)shmem_malloc(sizeof(TYPE));
     if (!buf)
     {
-        log_error(OSH_TC, "shmalloc\n");
+        log_error(OSH_TC, "shmem_malloc\n");
         return TC_FAIL;
     }
     log_debug(OSH_TC, "%d: buf = %p\n", my_proc, buf);
@@ -47,7 +47,7 @@ static int TEST_NAME(void)
     if (setjmp(error_env))
     {
         log_fatal(OSH_TC, "Test failed on val=%d buf[0]=%d\n", val, buf[0]);
-        shfree(buf);
+        shmem_free(buf);
         return TC_FAIL;
     }
 
@@ -77,7 +77,7 @@ static int TEST_NAME(void)
     putval = 10; val = 100 ; buf[0] = 1000; 
     DO_TEST(buf, SHMEM_CMP_LT, val, putval);
 
-    shfree(buf);
+    shmem_free(buf);
     log_debug(OSH_TC, "passed");
     return rc;
 }

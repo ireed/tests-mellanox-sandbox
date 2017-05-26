@@ -68,9 +68,9 @@ static int test_item1(void)
 	int tst, sst;
     int max_stride = MAX_ARRAY_SIZE/2-1;
 
-    num_proc = _num_pes();
-    my_proc = _my_pe();
-    shmem_addr = shmalloc(sizeof(*shmem_addr)*MAX_ARRAY_SIZE);
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
+    shmem_addr = shmem_malloc(sizeof(*shmem_addr)*MAX_ARRAY_SIZE);
     local_addr = malloc(sizeof(*local_addr)*MAX_ARRAY_SIZE);
     expect_value = malloc(sizeof(*expect_value)*MAX_ARRAY_SIZE);
     if (shmem_addr)
@@ -133,7 +133,7 @@ static int test_item1(void)
     }
     if (shmem_addr)
     {
-        shfree(shmem_addr);
+        shmem_free(shmem_addr);
     }
 
     return rc;

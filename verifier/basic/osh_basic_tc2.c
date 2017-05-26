@@ -80,8 +80,8 @@ static int test_item1(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = _num_pes();
-    my_proc = _my_pe();
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
 
     rc = (( my_proc < num_proc ) && (my_proc >= 0) ? TC_PASS : TC_FAIL);
 
@@ -98,19 +98,19 @@ static int test_item2(void)
     int num_proc = 0;
     int count = LOOP_COUNT;
 
-    num_proc = _num_pes();
+    num_proc = shmem_n_pes();
     rc = ( num_proc > 0  ? TC_PASS : TC_FAIL);
 
     while (!rc && --count)
     {
-        if (num_proc != _num_pes())
+        if (num_proc != shmem_n_pes())
         {
             rc = TC_FAIL;
             break;
         }
     }
 
-    log_debug(OSH_TC, "PE#%d num_proc=%d count=%d\n", _my_pe(), num_proc, count);
+    log_debug(OSH_TC, "PE#%d num_proc=%d count=%d\n", shmem_my_pe(), num_proc, count);
 
     return rc;
 }
@@ -122,19 +122,19 @@ static int test_item3(void)
     int my_proc = 0;
     int count = LOOP_COUNT;
 
-    my_proc = _my_pe();
+    my_proc = shmem_my_pe();
     rc = ( my_proc >= 0  ? TC_PASS : TC_FAIL);
 
     while (!rc && --count)
     {
-        if (my_proc != _my_pe())
+        if (my_proc != shmem_my_pe())
         {
             rc = TC_FAIL;
             break;
         }
     }
 
-    log_debug(OSH_TC, "PE#%d num_proc=%d count=%d\n", my_proc, _num_pes(), count);
+    log_debug(OSH_TC, "PE#%d num_proc=%d count=%d\n", my_proc, shmem_n_pes(), count);
 
     return rc;
 }
@@ -149,8 +149,8 @@ static int test_shmem_ptr()
 
 static int test_shmem_accessible()
 {
-    int my_pe = _my_pe();
-    int n_pes = _num_pes();
+    int my_pe = shmem_my_pe();
+    int n_pes = shmem_n_pes();
 
     if (!shmem_pe_accessible(my_pe))
         return TC_FAIL;

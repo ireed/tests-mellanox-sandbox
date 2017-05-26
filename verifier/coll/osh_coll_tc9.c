@@ -34,9 +34,9 @@ int osh_coll_tc9(const TE_NODE *node, int argc, const char *argv[])
   UNREFERENCED_PARAMETER(argc);
   UNREFERENCED_PARAMETER(argv);
 
-  numprocs = _num_pes();
+  numprocs = shmem_n_pes();
 
-  nlong = _my_pe() + 1;
+  nlong = shmem_my_pe() + 1;
 
   source = NULL;
   displ = NULL;
@@ -58,15 +58,15 @@ int osh_coll_tc9(const TE_NODE *node, int argc, const char *argv[])
     count = count + ii + 1;
   }
 
-  pSync = shmalloc(sizeof(long) *_SHMEM_COLLECT_SYNC_SIZE);
+  pSync = shmem_malloc(sizeof(long) *_SHMEM_COLLECT_SYNC_SIZE);
   for (ii=0; ii < _SHMEM_COLLECT_SYNC_SIZE; ii++)
     pSync[ii] = _SHMEM_SYNC_VALUE;
 
-  target = shmalloc(sizeof(int) * count);
+  target = shmem_malloc(sizeof(int) * count);
   for (ii = 0; ii < count; ii++)
     target[ii] = 0;
 
-  source = shmalloc(sizeof(int) * numprocs);
+  source = shmem_malloc(sizeof(int) * numprocs);
   for (ii = 0; ii < nlong; ii++)
     source[ii] = ii;
 
@@ -88,9 +88,9 @@ int osh_coll_tc9(const TE_NODE *node, int argc, const char *argv[])
   }
 
   /* Finalizes					*/
-  shfree(source);
-  shfree(target);
-  shfree(pSync);
+  shmem_free(source);
+  shmem_free(target);
+  shmem_free(pSync);
   free(displ);
 
   return rc;

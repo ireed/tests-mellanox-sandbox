@@ -52,7 +52,7 @@ static int test_item1(void)
     int remainderPe = nPe - (nPe % 2);
 
     static int statArray[ARRAY_SIZE];
-    int* dynamicArray = shmalloc( ARRAY_SIZE * sizeof(int) );
+    int* dynamicArray = shmem_malloc( ARRAY_SIZE * sizeof(int) );
 
     int iterate;
     for (iterate = 0; iterate < ARRAY_SIZE; iterate++)
@@ -86,6 +86,6 @@ static int test_item1(void)
         shmem_barrier_all();
     }
 
-    shfree(dynamicArray);
+    shmem_free(dynamicArray);
     return rc;
 }

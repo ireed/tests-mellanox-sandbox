@@ -86,10 +86,10 @@ static int test_item1(void)
     int peer_proc = 0;
     int i = 0;
 
-    num_proc = _num_pes();
-    my_proc = _my_pe();
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
 
-    shmem_addr = shmalloc(sizeof(*shmem_addr));
+    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
     if (shmem_addr)
     {
         TYPE_VALUE value = 0;
@@ -128,7 +128,7 @@ static int test_item1(void)
 
     if (shmem_addr)
     {
-        shfree(shmem_addr);
+        shmem_free(shmem_addr);
     }
 
     return rc;
@@ -150,13 +150,13 @@ static int test_item2(void)
     int missed_values = 0;
     static long* pSync = NULL;
 
-    num_proc = _num_pes();
-    my_proc = _my_pe();
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
 
-    shmem_addr = shmalloc(sizeof(*shmem_addr));
-    check_arr = shmalloc(sizeof(*check_arr) * num_proc);
+    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
+    check_arr = shmem_malloc(sizeof(*check_arr) * num_proc);
 
-    pSync = shmalloc(sizeof(*pSync) * _SHMEM_COLLECT_SYNC_SIZE);
+    pSync = shmem_malloc(sizeof(*pSync) * _SHMEM_COLLECT_SYNC_SIZE);
     for (i = 0; i < _SHMEM_COLLECT_SYNC_SIZE; i++) {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
@@ -214,11 +214,11 @@ static int test_item2(void)
 
     if (shmem_addr)
     {
-        shfree(shmem_addr);
+        shmem_free(shmem_addr);
     }
     if (pSync)
     {
-        shfree(pSync);
+        shmem_free(pSync);
     }
 
     return rc;

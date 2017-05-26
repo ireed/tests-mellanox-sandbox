@@ -12,7 +12,7 @@
 #include "osh_log.h"
 
 #include "shmem.h"
-#include "mpi.h"
+//#include "mpi.h"
 
 #include "osh_mix.h"
 
@@ -47,7 +47,7 @@ static int test_item1(void)
 {
     int rc = TC_PASS;
 
-    start_pes(0);
+    shmem_init();
 
     return rc;
 }

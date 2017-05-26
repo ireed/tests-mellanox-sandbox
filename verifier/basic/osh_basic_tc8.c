@@ -37,22 +37,22 @@ static void error_handler (int err)
 {
     log_error(OSH_TC, "The following functions result in an error:\n");
     if ((err & ERROR_SHMALLOC) == ERROR_SHMALLOC) {
-        log_error(OSH_TC, "testing_shmalloc\n");
+        log_error(OSH_TC, "testing_shmem_malloc\n");
     }
     if ((err & ERROR_SHREALLOC) == ERROR_SHREALLOC) {
-        log_error(OSH_TC, "testing_shrealloc\n");
+        log_error(OSH_TC, "testing_shmem_realloc\n");
     }
     if ((err & ERROR_SHMEMALIGN) == ERROR_SHMEMALIGN) {
-        log_error(OSH_TC, "testing_shmemalign\n ");
+        log_error(OSH_TC, "testing_shmem_align\n ");
     }
     if ((err & ERROR_TABLESHMALLOC) == ERROR_TABLESHMALLOC) {
-        log_error(OSH_TC, "table_shmalloc\n ");
+        log_error(OSH_TC, "table_shmem_malloc\n ");
     }
     if ((err & ERROR_TABLESHREALLOC) == ERROR_TABLESHREALLOC) {
-        log_error(OSH_TC, "table_shrealloc\n ");
+        log_error(OSH_TC, "table_shmem_realloc\n ");
     }
     if ((err & ERROR_TABLESHMEMALIGN) == ERROR_TABLESHMEMALIGN) {
-        log_error(OSH_TC, "table_shmemalign.\n ");
+        log_error(OSH_TC, "table_shmem_align.\n ");
     }
     if ((err & ERROR_MAXALLOC) == ERROR_MAXALLOC) {
         log_error(OSH_TC, "Maximal allocation size is not the heap size.\n");
@@ -83,21 +83,21 @@ static long int binary_search_size (long int max_alloc_size)
     max_size = max_alloc_size;
     low = max_size;
     high = max_size;
-    p = shmalloc (max_size);
+    p = shmem_malloc (max_size);
     while (p != NULL) {
-        shfree (p);
+        shmem_free (p);
         low = max_size;
         max_size = 2 * max_size;
         high = max_size;
-        p = shmalloc (max_size);
+        p = shmem_malloc (max_size);
     }
     while (high > low + 1) {
         mid_val = (long)floor ((double)((high + low) / 2));
-        p = shmalloc (mid_val);
+        p = shmem_malloc (mid_val);
         if (p == NULL) {
             high = mid_val;
         } else {
-            shfree (p);
+            shmem_free (p);
             low = mid_val;
         }
     }
@@ -109,14 +109,14 @@ static void free_alloc_table (void *allocTable[])
     size_t k;
     for (k = 0; k < TABLE_LENGTH; k++) {
         if (allocTable[k] != NULL) {
-            shfree (allocTable[k]);
+            shmem_free (allocTable[k]);
             allocTable[k] = NULL;
         }
     }
 }
 
 
-static int stressing_shmalloc_test (void)
+static int stressing_shmem_malloc_test (void)
 {
     int i, j, victim;
     int err = 0;
@@ -153,41 +153,41 @@ static int stressing_shmalloc_test (void)
             switch (i) {
             case ALLOC_SHMALLOC:
                 while (j >= 1 && !(err & ERROR_SHMALLOC)) {
-                    ptr = shmalloc (heap_size);
+                    ptr = shmem_malloc (heap_size);
                     if (NULL == ptr) {
                         err |= ERROR_SHMALLOC;
                     } else {
-                        shfree (ptr);
+                        shmem_free (ptr);
                     }
                     j--;
                 }
                 break;
             case ALLOC_SHREALLOC:
                 while (j >= 1 && !(err & ERROR_SHREALLOC)) {
-                    ptr = shmalloc (INITIAL_SIZE_FOR_SHREALLOC);
+                    ptr = shmem_malloc (INITIAL_SIZE_FOR_SHREALLOC);
                     if (NULL == ptr) {
-                        log_error(OSH_TC, "Failed in shmalloc in testing_shrealloc\n");
+                        log_error(OSH_TC, "Failed in shmem_malloc in testing_shmem_realloc\n");
                         err |= ERROR_SHREALLOC;
                     } else {
-                        newp = shrealloc (ptr, heap_size);
+                        newp = shmem_realloc (ptr, heap_size);
                         if (NULL == newp) {
-                            log_error(OSH_TC, "Failed in shrealloc in testing_shrealloc\n");
+                            log_error(OSH_TC, "Failed in shmem_realloc in testing_shmem_realloc\n");
                             err |= ERROR_SHREALLOC;
                         } else {
                             ptr = newp;
                         }
-                        shfree (ptr);
+                        shmem_free (ptr);
                     }
                     j--;
                 }
                 break;
             case ALLOC_SHMEMALIGN:
                 while (j >= 1 && !(err & ERROR_SHMEMALIGN)) {
-                    ptr = shmemalign (SHMEMALIGN_BOUNDRY, heap_size);
+                    ptr = shmem_align (SHMEMALIGN_BOUNDRY, heap_size);
                     if (NULL == ptr) {
                         err |= ERROR_SHMEMALIGN;
                     } else {
-                        shfree (ptr);
+                        shmem_free (ptr);
                     }
                     j--;
                 }
@@ -214,10 +214,10 @@ static int stressing_shmalloc_test (void)
                     } while (total_alloc_size > (heap_size * HEAP_PERCENT));
                     victim = rnd_mt_next(&rnd) % TABLE_LENGTH;
                     if (NULL != allocTable[victim]) {
-                        shfree (allocTable[victim]);
+                        shmem_free (allocTable[victim]);
                         allocTable[victim] = NULL;
                     }
-                    allocTable[victim] = shmalloc (size);
+                    allocTable[victim] = shmem_malloc (size);
                     if (NULL == allocTable[victim]) {
                         err |= ERROR_TABLESHMALLOC;
                     }
@@ -228,11 +228,11 @@ static int stressing_shmalloc_test (void)
                      && j < (TABLE_LENGTH * ITERATIONS_CONST); j++) {
                     victim = rnd_mt_next(&rnd) % TABLE_LENGTH;
                     if (NULL != allocTable[victim]) {
-                        shfree (allocTable[victim]);
+                        shmem_free (allocTable[victim]);
                         allocTable[victim] = NULL;
                     }
                     allocTable[victim] =
-                        shmalloc (INITIAL_SIZE_FOR_SHREALLOC);
+                        shmem_malloc (INITIAL_SIZE_FOR_SHREALLOC);
                     if (NULL == allocTable[victim]) {
                         err |= ERROR_TABLESHREALLOC;
                     } else {
@@ -255,12 +255,12 @@ static int stressing_shmalloc_test (void)
 
                         if (NULL == allocTable[victim]) {
                             allocTable[victim] =
-                                shmalloc (INITIAL_SIZE_FOR_SHREALLOC);
+                                shmem_malloc (INITIAL_SIZE_FOR_SHREALLOC);
                         }
 
 
                         if (NULL != allocTable[victim]) {
-                            newp = shrealloc (allocTable[victim], size);
+                            newp = shmem_realloc (allocTable[victim], size);
                             if (NULL == newp) {
                                 err |= ERROR_TABLESHREALLOC;
                             } else {
@@ -295,12 +295,12 @@ static int stressing_shmalloc_test (void)
 
                     victim = rnd_mt_next(&rnd) % TABLE_LENGTH;
                     if (NULL != allocTable[victim]) {
-                        shfree (allocTable[victim]);
+                        shmem_free (allocTable[victim]);
                         allocTable[victim] = NULL;
                     }
 
                     allocTable[victim] =
-                        shmemalign (SHMEMALIGN_BOUNDRY, size);
+                        shmem_align (SHMEMALIGN_BOUNDRY, size);
                     if (NULL == allocTable[victim]) {
                         err |= ERROR_TABLESHMEMALIGN;
                     }
@@ -326,7 +326,7 @@ int osh_basic_tc8 (const TE_NODE * node, int argc, const char *argv[])
     //shmem_init ();
     initialize_mt_generator(111,&rnd);
 
-    rc = stressing_shmalloc_test ();
+    rc = stressing_shmem_malloc_test ();
     log_item (node, 1, rc);
 
     if (rc != TC_PASS) {

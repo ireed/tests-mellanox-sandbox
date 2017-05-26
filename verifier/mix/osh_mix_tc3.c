@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <shmem.h>
-#include <mpi.h>
+//#include <mpi.h>
 
 #include "osh_def.h"
 #include "osh_cmn.h"
@@ -62,7 +62,7 @@ static void error_handler (int err)
         log_error (OSH_TC, "MPI_Allgather\n");
     }
     if ((err & ERROR_SHMEM_SHMALLOC) == ERROR_SHMEM_SHMALLOC) {
-        log_error (OSH_TC, "shmalloc\n");
+        log_error (OSH_TC, "shmem_malloc\n");
     }
     if ((err & ERROR_SHMEM_SWAP) == ERROR_SHMEM_SWAP) {
         log_error (OSH_TC, "shmem_int_swap\n");
@@ -96,6 +96,7 @@ static void error_handler (int err)
  * The root sends the total number of processes to all the other PEs
  * using broadcast.
  */
+/*
 static int mix_mpi_shmem_test (void)
 {
     int dest, source, prev, next;
@@ -105,14 +106,14 @@ static int mix_mpi_shmem_test (void)
 
     MPI_Request reqs[2];
     MPI_Status stats;
-    numprocs = _num_pes ();
+    numprocs = shmem_n_pes ();
     if (ROOT >= numprocs) {
         err |= ERROR_ROOT_VAL;
     } else {
         int mpi_sendbuf[2];
         int mpi_recvbuf[numprocs + 3];
 
-        myid = _my_pe ();
+        myid = shmem_my_pe ();
 
         for (i = 0; i < 2; i++) {
             mpi_sendbuf[i] = 0;
@@ -133,7 +134,7 @@ static int mix_mpi_shmem_test (void)
         dest = next;
         source = prev;
 
-              /** MPI PART **/
+              // MPI PART 
 
         res =
             MPI_Send (&mpi_sendbuf[0], 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
@@ -175,7 +176,7 @@ static int mix_mpi_shmem_test (void)
             return err;
         }
 
-        /* Checking logical correctness */
+        // Checking logical correctness 
         if (numprocs > 1) {
             if (myid > 1) {
                 if ((mpi_recvbuf[0] != (myid - 1))
@@ -224,7 +225,7 @@ static int mix_mpi_shmem_test (void)
             return err;
         }
 
-        /* Checking logical correctness */
+        // Checking logical correctness 
         for (i = 0; i < numprocs; i++) {
             total_sum += i;
         }
@@ -240,21 +241,21 @@ static int mix_mpi_shmem_test (void)
             return err;
         }
 
-                                                                                                                                                                                                                     /** SHMEM PART **/
-        int *shm_sendarr = (int *) shmalloc (2 * sizeof (int));
+                                                                                                                                                                                                                     // SHMEM PART 
+        int *shm_sendarr = (int *) shmem_malloc (2 * sizeof (int));
         if (NULL == shm_sendarr) {
             err |= ERROR_SHMEM_SHMALLOC;
             return err;
         }
-        int *shm_recvarr = (int *) shmalloc (2 * sizeof (int));
+        int *shm_recvarr = (int *) shmem_malloc (2 * sizeof (int));
         if (NULL == shm_recvarr) {
             err |= ERROR_SHMEM_SHMALLOC;
-            shfree (shm_sendarr);
+            shmem_free (shm_sendarr);
             return err;
         }
         if (!(err & ERROR_SHMEM_SHMALLOC)) {
             shm_sendarr[0] = myid + (numprocs / 2);
-            /* Placing the proper id to the matching pe */
+            // Placing the proper id to the matching pe 
             if (0 == numprocs % 2) {
                 if (myid < (numprocs / 2)) {
                     shmem_int_iput (&shm_recvarr[0], &shm_sendarr[0], 1, 1, 1,
@@ -282,27 +283,27 @@ static int mix_mpi_shmem_test (void)
                 }
             }
             shmem_barrier_all ();
-            /* Checking logical correctness */
+            // Checking logical correctness 
             if (shm_recvarr[0] != myid) {
                 err |= ERROR_SHMEM_START;
-                shfree (shm_sendarr);
-                shfree (shm_recvarr);
+                shmem_free (shm_sendarr);
+                shmem_free (shm_recvarr);
                 return err;
             }
 
             shmem_int_swap (&shm_recvarr[1], shm_recvarr[0],
                             numprocs - myid - 1);
             shmem_barrier_all ();
-            /* Checking logical correctness */
+            // Checking logical correctness 
             if ((shm_recvarr[0] + shm_recvarr[1]) != (numprocs - 1)) {
                 err |= ERROR_SHMEM_SWAP;
-                shfree (shm_sendarr);
-                shfree (shm_recvarr);
+                shmem_free (shm_sendarr);
+                shmem_free (shm_recvarr);
                 return err;
             }
 
             long int *pSync =
-                (long *) shmalloc (_SHMEM_BCAST_SYNC_SIZE *
+                (long *) shmem_malloc (_SHMEM_BCAST_SYNC_SIZE *
                                    sizeof (long int));
             for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i++) {
                 pSync[i] = _SHMEM_SYNC_VALUE;
@@ -311,7 +312,7 @@ static int mix_mpi_shmem_test (void)
             if (myid == ROOT) {
                 shm_recvarr[0] = numprocs;
             }
-            /* Sending the numprocs to all PEs */
+            // Sending the numprocs to all PEs 
             shmem_broadcast32 (&shm_sendarr[1], &shm_recvarr[0], 1, ROOT, 0,
                                0, numprocs, pSync);
             shmem_barrier_all ();
@@ -325,20 +326,21 @@ static int mix_mpi_shmem_test (void)
                                    ROOT - 1);
                 }
             }
-            /* Checking logical correctness */
+            // Checking logical correctness 
             if ((numprocs != 1)) {
                 if (shm_sendarr[1] != numprocs) {
                     err |= ERROR_SHMEM_END;
                 }
             }
 
-            shfree (shm_sendarr);
-            shfree (shm_recvarr);
-            shfree (pSync);
+            shmem_free (shm_sendarr);
+            shmem_free (shm_recvarr);
+            shmem_free (pSync);
         }
     }
     return err;
 }
+*/
 
 int osh_mix_tc3 (const TE_NODE * node, int argc, const char *argv[])
 {
@@ -349,8 +351,8 @@ int osh_mix_tc3 (const TE_NODE * node, int argc, const char *argv[])
    // MPI_Init (&argc, &bb);
    // shmem_init ();
 
-    rc = mix_mpi_shmem_test ();
-    log_item (node, 1, rc);
+    //rc = mix_mpi_shmem_test ();
+    //log_item (node, 1, rc);
 
     if (rc != TC_PASS) {
         error_handler (rc);

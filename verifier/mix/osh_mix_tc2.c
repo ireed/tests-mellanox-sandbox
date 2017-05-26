@@ -12,7 +12,7 @@
 #include "osh_log.h"
 
 #include "shmem.h"
-#include "mpi.h"
+//#include "mpi.h"
 
 #include "osh_mix.h"
 
@@ -20,7 +20,7 @@
  * Test Case can consitis of different number of separate items
  * it is recommended to form every item as function
  ***************************************************************************/
-static int test_item1(void);
+//static int test_item1(void);
 
 
 /****************************************************************************
@@ -33,8 +33,8 @@ int osh_mix_tc2(const TE_NODE *node, int argc, const char *argv[])
     UNREFERENCED_PARAMETER(argc);
     UNREFERENCED_PARAMETER(argv);
 
-    rc = test_item1();
-    log_item(node, 1, rc);
+    //rc = test_item1();
+    //log_item(node, 1, rc);
 
     return rc;
 }
@@ -43,6 +43,7 @@ int osh_mix_tc2(const TE_NODE *node, int argc, const char *argv[])
 /****************************************************************************
  * Place for Test Item functions
  ***************************************************************************/
+/*
 static int test_item1(void)
 {
     int rc = TC_PASS;
@@ -68,12 +69,12 @@ static int test_item1(void)
     int type = 2;
     double t_start = 0.0, t_end = 0.0;
 
-    myid = _my_pe();
+    myid = shmem_my_pe();
 
     align_size = MESSAGE_ALIGNMENT;
 
-    /* Allocate a variable from the symmetric heap */
-    sh_buf = (char *)shmalloc(MYBUFSIZE);
+    // Allocate a variable from the symmetric heap
+    sh_buf = (char *)shmem_malloc(MYBUFSIZE);
     if (sh_buf)
     {
         s_buf =
@@ -106,7 +107,7 @@ static int test_item1(void)
                     skip = skip_large;
                 }
 
-                if (type == 1)  /* OSHMEM part */
+                if (type == 1)  // OSHMEM part 
                 {
                     shmem_barrier_all();
 
@@ -129,7 +130,7 @@ static int test_item1(void)
                         }
                     }
                 }
-                else  /* OMPI part */
+                else  // OMPI part 
                 {
                     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -166,8 +167,9 @@ static int test_item1(void)
 
     if (sh_buf)
     {
-        shfree(sh_buf);
+        shmem_free(sh_buf);
     }
 
     return rc;
 }
+*/

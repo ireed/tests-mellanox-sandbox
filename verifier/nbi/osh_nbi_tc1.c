@@ -12,7 +12,7 @@
 #include "osh_log.h"
 
 #include "shmem.h"
-#include "mpi.h"
+//#include "mpi.h"
 
 #include "osh_nbi_tests.h"
 
@@ -61,9 +61,9 @@ static int test_item1(void)
     int my_proc = 0;
     int peer_proc = 0;
 
-    my_proc = _my_pe();
+    my_proc = shmem_my_pe();
 
-    shmem_addr = shmalloc(sizeof(*shmem_addr));
+    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
     if (shmem_addr)
     {
         TYPE_VALUE value = -1;
@@ -98,7 +98,7 @@ static int test_item1(void)
 
     if (shmem_addr)
     {
-        shfree(shmem_addr);
+        shmem_free(shmem_addr);
     }
 
     return rc;

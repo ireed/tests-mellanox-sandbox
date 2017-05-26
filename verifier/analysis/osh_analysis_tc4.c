@@ -12,7 +12,7 @@
 #include "osh_log.h"
 
 #include "shmem.h"
-#include "mpi.h"
+//#include "mpi.h"
 
 #include "osh_analysis.h"
 
@@ -77,7 +77,7 @@ int osh_analysis_tc4(const TE_NODE *node, int argc, const char *argv[])
 
     if (rc == TC_PASS)
     {
-        pSync = shmalloc(sizeof(*pSync) * _SHMEM_REDUCE_SYNC_SIZE);
+        pSync = shmem_malloc(sizeof(*pSync) * _SHMEM_REDUCE_SYNC_SIZE);
         if (!pSync)
         {
             rc = TC_SETUP_FAIL;
@@ -92,7 +92,7 @@ int osh_analysis_tc4(const TE_NODE *node, int argc, const char *argv[])
 
     if (pSync)
     {
-        shfree(pSync);
+        shmem_free(pSync);
     }
 
     return rc;
@@ -114,8 +114,8 @@ static int test_item1(void)
     double report_end = 0;
     static double report_result = -1.0;
 
-    num_proc = _num_pes();
-    my_proc = _my_pe();
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
 
     /* Warmup */
     rc = __do_warmup( 100 );
@@ -124,8 +124,8 @@ static int test_item1(void)
     /* Main section */
     if (rc == TC_PASS)
     {
-        shmem_addr = (TYPE_VALUE*)shmalloc(__report_msize);
-        send_addr = (TYPE_VALUE*)shmalloc(__report_msize);
+        shmem_addr = (TYPE_VALUE*)shmem_malloc(__report_msize);
+        send_addr = (TYPE_VALUE*)shmem_malloc(__report_msize);
         if (shmem_addr && send_addr)
         {
             TYPE_VALUE expect_value = 0;
@@ -136,7 +136,7 @@ static int test_item1(void)
             /* cycle for number of elements having data type TYPE_VALUE */
             for (nelems = 1; (nelems <= (__report_msize / (long)SIZE_VALUE)) && (rc == TC_PASS); nelems<<=1)
             {
-                pWrk = shmalloc(sizeof(*pWrk) * sys_max(nelems/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+                pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(nelems/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
                 if (pWrk)
                 {
                     source_value = (TYPE_VALUE)nelems;
@@ -226,7 +226,7 @@ static int test_item1(void)
                         REPORT_OUTPUT("ERROR: Data integrity failure\n");
                     }
 
-                    shfree(pWrk);
+                    shmem_free(pWrk);
                 }
                 else
                 {
@@ -242,12 +242,12 @@ static int test_item1(void)
 
     if (send_addr)
     {
-        shfree(send_addr);
+        shmem_free(send_addr);
     }
 
     if (shmem_addr)
     {
-        shfree(shmem_addr);
+        shmem_free(shmem_addr);
     }
 
     return rc;

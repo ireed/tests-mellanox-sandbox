@@ -74,8 +74,8 @@ static int test_item1(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = _num_pes();
-    my_proc = _my_pe();
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
 
     wait = sys_min(my_proc * WAIT_SEC, WAIT_MAX_SEC);
     expect_value = ( (num_proc - my_proc - 1) > 0 ? (num_proc - my_proc - 1) * WAIT_SEC - 2 : 0 );
@@ -104,8 +104,8 @@ static int test_item2(void)
     int i = 0;
     int* shmem_indx = NULL, *shmem_array = NULL;
 
-    num_proc = _num_pes();
-    my_proc = _my_pe();
+    num_proc = shmem_n_pes();
+    my_proc = shmem_my_pe();
 
     if (num_proc < 2)
     {
@@ -113,8 +113,8 @@ static int test_item2(void)
         return rc;
     }
 
-    shmem_indx = (int*)shmalloc(sizeof(*shmem_indx));
-    shmem_array = shmalloc(sizeof(*shmem_array) * (num_proc - 1) * CYCLE_COUNT);
+    shmem_indx = (int*)shmem_malloc(sizeof(*shmem_indx));
+    shmem_array = shmem_malloc(sizeof(*shmem_array) * (num_proc - 1) * CYCLE_COUNT);
 
     if ( !shmem_indx || !shmem_array )
     {
@@ -149,11 +149,11 @@ static int test_item2(void)
 
     if (shmem_indx)
     {
-        shfree(shmem_indx);
+        shmem_free(shmem_indx);
     }
     if (shmem_array)
     {
-        shfree(shmem_array);
+        shmem_free(shmem_array);
     }
     return rc;
 }
