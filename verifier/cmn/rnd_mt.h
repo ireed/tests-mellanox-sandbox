@@ -31,6 +31,7 @@ void initialize_mt_generator(int seed, random_mt_state_t *state) {
 /* Generate an array of 624 untempered numbers */
 void generate_numbers(random_mt_state_t *state)
 {
+    int i = 0;
     for (i = 0; i<624; i++) {
         uint32_t y = (state->MT[i] & 0x80000000)                      // bit 31 (32nd bit) of MT[i]
             + (state->MT[(i+1) % 624] & 0x7fffffff);   // bits 0-30 (first 31 bits) of MT[...]
