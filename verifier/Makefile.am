@@ -30,7 +30,7 @@ oshmem_test_CFLAGS =  $(CFLAGS) -Werror -Wall -D__LINUX__ \
 					  -I$(top_srcdir) \
 					  -I$(top_srcdir)/cmn
 
-oshmem_test_LDFLAGS = $(LDFLAGS) -L$(prefix)/lib -loshmem_basic_tc3 -lm -lpthread
+oshmem_test_LDFLAGS = $(LDFLAGS) -L$(prefix)/lib -L. -loshmem_basic_tc3 -lm -lpthread
 
 noinst_HEADERS = \
 	osh_tests.h \
