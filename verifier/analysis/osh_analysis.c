@@ -17,7 +17,7 @@
 
 const TE_NODE analysis_tcs[] =
 {
-    { NULL, osh_analysis_tc1,   "cycles",   aopt_set_string( "tc1" ), 	"Lost cycles check.", TEST_RUN},
+//    { NULL, osh_analysis_tc1,   "cycles",   aopt_set_string( "tc1" ), 	"Lost cycles check.", TEST_RUN},
     { NULL, osh_analysis_tc2,   "barrier",  aopt_set_string( "tc2" ), 	"Barrier performance.", TEST_RUN},
     { NULL, osh_analysis_tc3,   "bcast",    aopt_set_string( "tc3" ), 	"Broadcast performance.", TEST_RUN},
     { NULL, osh_analysis_tc4,   "reduce",   aopt_set_string( "tc4" ), 	"Reduce performance.", TEST_RUN},

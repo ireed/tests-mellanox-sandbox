@@ -16,8 +16,8 @@
 
 const TE_NODE coll_tcs[] =
 {
-    { NULL, osh_coll_tc1,  "broadcast32",   aopt_set_string( "tc1" ), 	"shmem_broadcast32(): Copy a data object to a target location on all PEs of the active set.", TEST_RUN},
-    { NULL, osh_coll_tc2,  "broadcast64",   aopt_set_string( "tc2" ), 	"shmem_broadcast64(): Copy a data object to a target location on all PEs of the active set.", TEST_RUN},
+//    { NULL, osh_coll_tc1,  "broadcast32",   aopt_set_string( "tc1" ), 	"shmem_broadcast32(): Copy a data object to a target location on all PEs of the active set.", TEST_RUN},
+//    { NULL, osh_coll_tc2,  "broadcast64",   aopt_set_string( "tc2" ), 	"shmem_broadcast64(): Copy a data object to a target location on all PEs of the active set.", TEST_RUN},
     { NULL, osh_coll_tc3,  "bcast10int",    aopt_set_string( "tc3" ), 	"shmem_broadcast32(): From PE == 1 broadcast 10 integers to all (pe%2 == 1) and check", TEST_RUN},
     { NULL, osh_coll_tc4,  "collect32",     aopt_set_string( "tc4" ), 	"shmem_collect32(): Concatenates blocks of data from multiple processing elements (PEs) to an array in every PE.", TEST_RUN},
     { NULL, osh_coll_tc5,  "collect64",     aopt_set_string( "tc5" ), 	"shmem_collect64(): Concatenates blocks of data from multiple processing elements (PEs) to an array in every PE.", TEST_RUN},
@@ -25,7 +25,7 @@ const TE_NODE coll_tcs[] =
     { NULL, osh_coll_tc7,  "fcollect64",    aopt_set_string( "tc7" ), 	"shmem_fcollect64(): Concatenates blocks of data from multiple processing elements (PEs) to an array in every PE.", TEST_RUN},
     { NULL, osh_coll_tc8,  "fcollect32_2",  aopt_set_string( "tc8" ), 	"shmem_fcollect32(): Concatenates blocks of data from multiple processing elements (PEs) to an array in every PE - Cray test smatestC2.c.", TEST_RUN},
     { NULL, osh_coll_tc9,  "collect32_2",   aopt_set_string( "tc9" ), 	"shmem_collect32(): Concatenates blocks of data from multiple processing elements (PEs) to an array in every PE - Cray test smatestC3.c.", TEST_RUN},
-    { NULL, osh_coll_tc10, "broadcast",     aopt_set_string( "tc10" ), 	"shmem_broadcast(): Copy a data object to a target location on all PEs of the active set.", TEST_RUN},
+//    { NULL, osh_coll_tc10, "broadcast",     aopt_set_string( "tc10" ), 	"shmem_broadcast(): Copy a data object to a target location on all PEs of the active set.", TEST_RUN},
 #ifdef HAVE_ALLTOALL
     { NULL, osh_coll_tc11, "alltoall",      aopt_set_string( "tc11" ),  "shmem_alltoall(): Each PE exchanges a fixed amount of data with all other PEs.", TEST_RUN},
     { NULL, osh_coll_tc12, "alltoalls",     aopt_set_string( "tc12" ),  "shmem_alltoalls(): Each PE exchanges a fixed amount of strided data with all other PEs.", TEST_RUN},
