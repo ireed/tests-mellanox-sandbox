@@ -184,8 +184,8 @@ static int test_item2(void)
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
-            source[(pe * count * sst) + i] = my_proc + i;
-            dest[(pe * count * dst) + i] = 9999;
+            source[(pe * count * sst) + (i * sst)] = my_proc + i;
+            dest[(pe * count * dst) + (i * dst)] = 9999;
         }
     }
 
@@ -202,10 +202,10 @@ static int test_item2(void)
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
             expect_value = i + index_to_pe(pe, 0, 0, num_proc);
-            if (dest[(pe * count * dst) + i] != expect_value) {
+            if (dest[(pe * count * dst) + (i * dst)] != expect_value) {
                 rc = TC_FAIL;
                 log_debug(OSH_TC, "my#%d ERROR: dest[%d]=%ld, should be %d\n",
-                        my_proc, (pe * count * dst) + i, dest[(pe * count * dst) + i],
+                        my_proc, (pe * count * dst) + (i * dst), dest[(pe * count * dst) + (i * dst)],
                         expect_value);
             }
         }
@@ -238,8 +238,8 @@ static int test_item3(void)
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
-            source[(pe * count * sst) + i] = my_proc + i;
-            dest[(pe * count * dst) + i] = 9999;
+            source[(pe * count * sst) + (i * sst)] = my_proc + i;
+            dest[(pe * count * dst) + (i * dst)] = 9999;
         }
     }
 
@@ -256,10 +256,10 @@ static int test_item3(void)
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
             expect_value = i + index_to_pe(pe, 0, 0, num_proc);
-            if (dest[(pe * count * dst) + i] != expect_value) {
+            if (dest[(pe * count * dst) + (i * dst)] != expect_value) {
                 rc = TC_FAIL;
                 log_debug(OSH_TC, "my#%d ERROR: dest[%d]=%ld, should be %d\n",
-                        my_proc, (pe * count * dst) + i, dest[(pe * count * dst) + i],
+                        my_proc, (pe * count * dst) + (i * dst), dest[(pe * count * dst) + (i * dst)],
                         expect_value);
             }
         }
@@ -293,8 +293,8 @@ static int test_item4(void)
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
-            source[(pe * count * sst) + i] = my_proc + i;
-            dest[(pe * count * dst) + i] = 9999;
+            source[(pe * count * sst) + (i * sst)] = my_proc + i;
+            dest[(pe * count * dst) + (i * dst)] = 9999;
         }
     }
 
@@ -311,10 +311,10 @@ static int test_item4(void)
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
             expect_value = i + index_to_pe(pe, 0, 0, num_proc);
-            if (dest[(pe * count * dst) + i] != expect_value) {
+            if (dest[(pe * count * dst) + (i * dst)] != expect_value) {
                 rc = TC_FAIL;
                 log_debug(OSH_TC, "my#%d ERROR: dest[%d]=%ld, should be %d\n",
-                        my_proc, (pe * count * dst) + i, dest[(pe * count * dst) + i],
+                        my_proc, (pe * count * dst) + (i * dst), dest[(pe * count * dst) + (i * dst)],
                         expect_value);
             }
         }
@@ -347,8 +347,8 @@ static int test_item5(void)
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
-            source[(pe * count * sst) + i] = my_proc + i;
-            dest[(pe * count * dst) + i] = 9999;
+            source[(pe * count * sst) + (i * sst)] = my_proc + i;
+            dest[(pe * count * dst) + (i * dst)] = 9999;
         }
     }
 
@@ -365,10 +365,10 @@ static int test_item5(void)
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
             expect_value = i + index_to_pe(pe, 0, 0, num_proc);
-            if (dest[(pe * count * dst) + i] != expect_value) {
+            if (dest[(pe * count * dst) + (i * dst)] != expect_value) {
                 rc = TC_FAIL;
                 log_debug(OSH_TC, "my#%d ERROR: dest[%d]=%ld, should be %d\n",
-                        my_proc, (pe * count * dst) + i, dest[(pe * count * dst) + i],
+                        my_proc, (pe * count * dst) + (i * dst), dest[(pe * count * dst) + (i * dst)],
                         expect_value);
             }
         }
@@ -402,8 +402,8 @@ static int test_item6(void)
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
-            source[(pe * count * sst) + i] = my_proc + i;
-            dest[(pe * count * dst) + i] = 9999;
+            source[(pe * count * sst) + (i * sst)] = my_proc + (i * sst);
+            dest[(pe * count * dst) + (i * dst)] = 9999;
         }
     }
 
@@ -420,10 +420,10 @@ static int test_item6(void)
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
             expect_value = i + index_to_pe(pe, 0, 0, num_proc);
-            if (dest[(pe * count * dst) + i] != expect_value) {
+            if (dest[(pe * count * dst) + (i * dst)] != expect_value) {
                 rc = TC_FAIL;
                 log_debug(OSH_TC, "my#%d ERROR: dest[%d]=%ld, should be %d\n",
-                        my_proc, (pe * count * dst) + i, dest[(pe * count * dst) + i],
+                        my_proc, (pe * count * dst) + (i * dst), dest[(pe * count * dst) + (i * dst)],
                         expect_value);
             }
         }
