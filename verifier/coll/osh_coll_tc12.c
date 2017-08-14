@@ -47,7 +47,7 @@ int osh_coll_tc12(const TE_NODE *node, int argc, const char *argv[])
 
     if (rc == TC_PASS)
     {
-        pSync = shmem_malloc(sizeof(*pSync) * SHMEM_ALLTOALL_SYNC_SIZE);
+        pSync = shmem_malloc(sizeof(*pSync) * SHMEM_ALLTOALLS_SYNC_SIZE);
         if (!pSync)
         {
             rc = TC_SETUP_FAIL;
@@ -129,13 +129,13 @@ static int test_item1(void)
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
-            source[(pe * count * sst) + i] = my_proc + i;
-            dest[(pe * count * dst) + i] = 9999;
+            source[(pe * count * sst) + (i * sst)] = my_proc + i;
+            dest[(pe * count * dst) + (i * dst)] = 9999;
         }
     }
 
     /* This guarantees that PE set initial value before peer change one */
-    for ( i = 0; i < SHMEM_ALLTOALL_SYNC_SIZE; i++ )
+    for ( i = 0; i < SHMEM_ALLTOALLS_SYNC_SIZE; i++ )
     {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
@@ -147,10 +147,10 @@ static int test_item1(void)
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
             expect_value = i + index_to_pe(pe, 0, 0, num_proc);
-            if (dest[(pe * count * dst) + i] != expect_value) {
+            if (dest[(pe * count * dst) + (i * dst)] != expect_value) {
                 rc = TC_FAIL;
                 log_debug(OSH_TC, "my#%d ERROR: dest[%d]=%ld, should be %d\n",
-                        my_proc, (pe * count * dst) + i, dest[(pe * count * dst) + i],
+                        my_proc, (pe * count * dst) + (i * dst), dest[(pe * count * dst) + (i * dst)],
                         expect_value);
             }
         }
@@ -190,7 +190,7 @@ static int test_item2(void)
     }
 
     /* This guarantees that PE set initial value before peer change one */
-    for ( i = 0; i < SHMEM_ALLTOALL_SYNC_SIZE; i++ )
+    for ( i = 0; i < SHMEM_ALLTOALLS_SYNC_SIZE; i++ )
     {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
@@ -244,7 +244,7 @@ static int test_item3(void)
     }
 
     /* This guarantees that PE set initial value before peer change one */
-    for ( i = 0; i < SHMEM_ALLTOALL_SYNC_SIZE; i++ )
+    for ( i = 0; i < SHMEM_ALLTOALLS_SYNC_SIZE; i++ )
     {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
@@ -299,7 +299,7 @@ static int test_item4(void)
     }
 
     /* This guarantees that PE set initial value before peer change one */
-    for ( i = 0; i < SHMEM_ALLTOALL_SYNC_SIZE; i++ )
+    for ( i = 0; i < SHMEM_ALLTOALLS_SYNC_SIZE; i++ )
     {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
@@ -353,7 +353,7 @@ static int test_item5(void)
     }
 
     /* This guarantees that PE set initial value before peer change one */
-    for ( i = 0; i < SHMEM_ALLTOALL_SYNC_SIZE; i++ )
+    for ( i = 0; i < SHMEM_ALLTOALLS_SYNC_SIZE; i++ )
     {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
@@ -408,7 +408,7 @@ static int test_item6(void)
     }
 
     /* This guarantees that PE set initial value before peer change one */
-    for ( i = 0; i < SHMEM_ALLTOALL_SYNC_SIZE; i++ )
+    for ( i = 0; i < SHMEM_ALLTOALLS_SYNC_SIZE; i++ )
     {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }

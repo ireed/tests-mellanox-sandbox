@@ -78,7 +78,7 @@ int osh_coll_tc1(const TE_NODE *node, int argc, const char *argv[])
 
     if (rc == TC_PASS)
     {
-        pSync = shmem_malloc(sizeof(*pSync) * _SHMEM_COLLECT_SYNC_SIZE);
+        pSync = shmem_malloc(sizeof(*pSync) * _SHMEM_BCAST_SYNC_SIZE);
         if (!pSync)
         {
             rc = TC_SETUP_FAIL;
@@ -190,7 +190,7 @@ static int test_item1(void)
         expect_value = DEFAULT_VALUE;
 
         /* This guarantees that PE set initial value before peer change one */
-        for ( j = 0; j < _SHMEM_COLLECT_SYNC_SIZE; j++ )
+        for ( j = 0; j < _SHMEM_BCAST_SYNC_SIZE; j++ )
         {
             pSync[j] = _SHMEM_SYNC_VALUE;
         }
@@ -275,7 +275,7 @@ static int test_item2(void)
         expect_value = (my_proc == root_proc ? DEFAULT_VALUE : BASE_VALUE);
 
         /* This guarantees that PE set initial value before peer change one */
-        for ( j = 0; j < _SHMEM_COLLECT_SYNC_SIZE; j++ )
+        for ( j = 0; j < _SHMEM_BCAST_SYNC_SIZE; j++ )
         {
             pSync[j] = _SHMEM_SYNC_VALUE;
         }
@@ -361,7 +361,7 @@ static int test_item3(void)
         expect_value = (my_proc == root_proc ? DEFAULT_VALUE : BASE_VALUE);
 
         /* This guarantees that PE set initial value before peer change one */
-        for ( j = 0; j < _SHMEM_COLLECT_SYNC_SIZE; j++ )
+        for ( j = 0; j < _SHMEM_BCAST_SYNC_SIZE; j++ )
         {
             pSync[j] = _SHMEM_SYNC_VALUE;
         }
@@ -447,7 +447,7 @@ static int test_item4(void)
         expect_value = (((my_proc % 2) == 0) && (my_proc != 0) ? BASE_VALUE : DEFAULT_VALUE);
 
         /* This guarantees that PE set initial value before peer change one */
-        for ( j = 0; j < _SHMEM_COLLECT_SYNC_SIZE; j++ )
+        for ( j = 0; j < _SHMEM_BCAST_SYNC_SIZE; j++ )
         {
             pSync[j] = _SHMEM_SYNC_VALUE;
         }
@@ -545,7 +545,7 @@ static int test_item5(void)
             expect_value = (((my_proc % 2) == 0) && (my_proc != root_proc) ? peer_value : DEFAULT_VALUE);
 
             /* This guarantees that PE set initial value before peer change one */
-            for ( j = 0; j < _SHMEM_COLLECT_SYNC_SIZE; j++ )
+            for ( j = 0; j < _SHMEM_BCAST_SYNC_SIZE; j++ )
             {
                 pSync[j] = _SHMEM_SYNC_VALUE;
             }
@@ -653,7 +653,7 @@ static int test_item6(void)
             expect_value = (((my_proc % 2) == 0) && (my_proc != root_proc) ? peer_value : DEFAULT_VALUE);
 
             /* This guarantees that PE set initial value before peer change one */
-            for ( j = 0; j < _SHMEM_COLLECT_SYNC_SIZE; j++ )
+            for ( j = 0; j < _SHMEM_BCAST_SYNC_SIZE; j++ )
             {
                 pSync[j] = _SHMEM_SYNC_VALUE;
             }
@@ -721,7 +721,7 @@ static int test_item7(void)
     num_proc = shmem_n_pes();
     my_proc = shmem_my_pe();
 
-    pSyncMult = shmem_malloc(sizeof(*pSyncMult) * pSyncNum * _SHMEM_COLLECT_SYNC_SIZE);
+    pSyncMult = shmem_malloc(sizeof(*pSyncMult) * pSyncNum * _SHMEM_BCAST_SYNC_SIZE);
     if (!pSyncMult)
     {
         rc = TC_SETUP_FAIL;
@@ -732,7 +732,7 @@ static int test_item7(void)
         int i = 0;
         int j = 0;
 
-        for ( j = 0; j < pSyncNum * _SHMEM_COLLECT_SYNC_SIZE; j++ )
+        for ( j = 0; j < pSyncNum * _SHMEM_BCAST_SYNC_SIZE; j++ )
         {
             pSyncMult[j] = _SHMEM_SYNC_VALUE;
         }
@@ -753,7 +753,7 @@ static int test_item7(void)
         for (i = 0; (i < __cycle_count) && (rc == TC_PASS); i++)
         {
             /* Put value to peer */
-            FUNC_VALUE(shmem_addr + (i % 2) * MAX_BUFFER_SIZE, send_addr + (i % 2) * MAX_BUFFER_SIZE, MAX_BUFFER_SIZE, root_proc, 0, 0, num_proc, pSyncMult + (i % pSyncNum) * _SHMEM_COLLECT_SYNC_SIZE);
+            FUNC_VALUE(shmem_addr + (i % 2) * MAX_BUFFER_SIZE, send_addr + (i % 2) * MAX_BUFFER_SIZE, MAX_BUFFER_SIZE, root_proc, 0, 0, num_proc, pSyncMult + (i % pSyncNum) * _SHMEM_BCAST_SYNC_SIZE);
             rc = (!compare_buffer_with_const(shmem_addr + (i % 2) * MAX_BUFFER_SIZE, MAX_BUFFER_SIZE, &expect_value, sizeof(expect_value)) ? TC_PASS : TC_FAIL);
 
             log_debug(OSH_TC, "my#%d root(#%d:%lld) expected = %lld actual = %lld buffer size = %lld\n",
