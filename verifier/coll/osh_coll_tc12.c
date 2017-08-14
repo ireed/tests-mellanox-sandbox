@@ -402,7 +402,7 @@ static int test_item6(void)
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
         for (i = 0; i < count; i++) {
-            source[(pe * count * sst) + (i * sst)] = my_proc + (i * sst);
+            source[(pe * count * sst) + (i * sst)] = my_proc + i;
             dest[(pe * count * dst) + (i * dst)] = 9999;
         }
     }
