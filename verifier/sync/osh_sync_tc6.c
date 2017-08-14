@@ -21,7 +21,7 @@
  ***************************************************************************/
 static int test_item1(void);
 
-#define NUMBER_OF_ITERATIONS 100000
+#define NUMBER_OF_ITERATIONS 10000
 
 /****************************************************************************
  * Test Case processing procedure
