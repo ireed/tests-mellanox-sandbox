@@ -62,7 +62,7 @@ static void error_handler (int err)
         log_error (OSH_TC, "MPI_Allgather\n");
     }
     if ((err & ERROR_SHMEM_SHMALLOC) == ERROR_SHMEM_SHMALLOC) {
-        log_error (OSH_TC, "shmem_malloc\n");
+        log_error (OSH_TC, "shmalloc\n");
     }
     if ((err & ERROR_SHMEM_SWAP) == ERROR_SHMEM_SWAP) {
         log_error (OSH_TC, "shmem_int_swap\n");
@@ -106,14 +106,14 @@ static int mix_mpi_shmem_test (void)
 
     MPI_Request reqs[2];
     MPI_Status stats;
-    numprocs = shmem_n_pes ();
+    numprocs = _num_pes ();
     if (ROOT >= numprocs) {
         err |= ERROR_ROOT_VAL;
     } else {
         int mpi_sendbuf[2];
         int mpi_recvbuf[numprocs + 3];
 
-        myid = shmem_my_pe ();
+        myid = _my_pe ();
 
         for (i = 0; i < 2; i++) {
             mpi_sendbuf[i] = 0;
@@ -242,15 +242,15 @@ static int mix_mpi_shmem_test (void)
         }
 
                                                                                                                                                                                                                      // SHMEM PART 
-        int *shm_sendarr = (int *) shmem_malloc (2 * sizeof (int));
+        int *shm_sendarr = (int *) shmalloc (2 * sizeof (int));
         if (NULL == shm_sendarr) {
             err |= ERROR_SHMEM_SHMALLOC;
             return err;
         }
-        int *shm_recvarr = (int *) shmem_malloc (2 * sizeof (int));
+        int *shm_recvarr = (int *) shmalloc (2 * sizeof (int));
         if (NULL == shm_recvarr) {
             err |= ERROR_SHMEM_SHMALLOC;
-            shmem_free (shm_sendarr);
+            shfree (shm_sendarr);
             return err;
         }
         if (!(err & ERROR_SHMEM_SHMALLOC)) {
@@ -286,8 +286,8 @@ static int mix_mpi_shmem_test (void)
             // Checking logical correctness 
             if (shm_recvarr[0] != myid) {
                 err |= ERROR_SHMEM_START;
-                shmem_free (shm_sendarr);
-                shmem_free (shm_recvarr);
+                shfree (shm_sendarr);
+                shfree (shm_recvarr);
                 return err;
             }
 
@@ -297,13 +297,13 @@ static int mix_mpi_shmem_test (void)
             // Checking logical correctness 
             if ((shm_recvarr[0] + shm_recvarr[1]) != (numprocs - 1)) {
                 err |= ERROR_SHMEM_SWAP;
-                shmem_free (shm_sendarr);
-                shmem_free (shm_recvarr);
+                shfree (shm_sendarr);
+                shfree (shm_recvarr);
                 return err;
             }
 
             long int *pSync =
-                (long *) shmem_malloc (_SHMEM_BCAST_SYNC_SIZE *
+                (long *) shmalloc (_SHMEM_BCAST_SYNC_SIZE *
                                    sizeof (long int));
             for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i++) {
                 pSync[i] = _SHMEM_SYNC_VALUE;
@@ -333,9 +333,9 @@ static int mix_mpi_shmem_test (void)
                 }
             }
 
-            shmem_free (shm_sendarr);
-            shmem_free (shm_recvarr);
-            shmem_free (pSync);
+            shfree (shm_sendarr);
+            shfree (shm_recvarr);
+            shfree (pSync);
         }
     }
     return err;
@@ -349,7 +349,7 @@ int osh_mix_tc3 (const TE_NODE * node, int argc, const char *argv[])
     UNREFERENCED_PARAMETER (argv);
 
    // MPI_Init (&argc, &bb);
-   // shmem_init ();
+   //start_pes(0);
 
     //rc = mix_mpi_shmem_test ();
     //log_item (node, 1, rc);

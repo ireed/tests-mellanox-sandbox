@@ -58,10 +58,10 @@ static int test_item1(void)
     long original_value, prev_value, new_value, check_value;
     long *lock_value = 0;
 
-    my_proc = shmem_my_pe();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
-    lock_value = shmem_malloc(sizeof(*lock_value));
+    shmem_addr = shmalloc(sizeof(*shmem_addr));
+    lock_value = shmalloc(sizeof(*lock_value));
     *lock_value = 0;
 
     shmem_barrier_all();
@@ -89,10 +89,10 @@ static int test_item1(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
-    shmem_free(lock_value);
+    shfree(lock_value);
 
     return rc;
 }

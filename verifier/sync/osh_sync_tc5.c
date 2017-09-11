@@ -59,15 +59,15 @@ int osh_sync_tc5(const TE_NODE *node, int argc, const char *argv[])
 
 static int test_item1(void)
 {
-    int me = shmem_my_pe();
-    int num_pe = shmem_n_pes();
+    int me = _my_pe();
+    int num_pe = _num_pes();
     int rc = TC_PASS;
     const int number_of_iterations = 10;
     const int number_of_write_attempts = 1000;
     int i, j;
     int zero = 0;
 
-    int *test_array = shmem_malloc(num_pe * sizeof(int));
+    int *test_array = shmalloc(num_pe * sizeof(int));
 
     for (i = 0; i < number_of_iterations; i++)
     {
@@ -89,22 +89,22 @@ static int test_item1(void)
         }
     }
 
-    shmem_free(test_array);
+    shfree(test_array);
 
     return rc;
 }
 
 static int test_item2(void)
 {
-    int me = shmem_my_pe();
-    int num_pe = shmem_n_pes();
+    int me = _my_pe();
+    int num_pe = _num_pes();
     int rc = TC_PASS;
     const int number_of_iterations = 10;
     const int number_of_write_attempts = 1000;
     int i, j;
     char zero = 0;
 
-    char *test_array = shmem_malloc(num_pe * sizeof(char));
+    char *test_array = shmalloc(num_pe * sizeof(char));
 
     for (i = 0; i < number_of_iterations; i++)
     {
@@ -128,15 +128,15 @@ static int test_item2(void)
         }
     }
 
-    shmem_free(test_array);
+    shfree(test_array);
 
     return rc;
 }
 
 static int test_item3(void)
 {
-    long me = shmem_my_pe();
-    int num_pe = shmem_n_pes();
+    long me = _my_pe();
+    int num_pe = _num_pes();
     int rc = TC_PASS;
     const int number_of_iterations = 10;
     const int number_of_write_attempts = 10000;
@@ -144,7 +144,7 @@ static int test_item3(void)
     char zero = 0;
     static long test_variable = 0;
 
-    char *test_array = shmem_malloc(num_pe * sizeof(char));
+    char *test_array = shmalloc(num_pe * sizeof(char));
 
     if (num_pe <= 1)
         return TC_SETUP_FAIL;
@@ -173,7 +173,7 @@ static int test_item3(void)
         shmem_long_put(&test_variable, &me, 1, 1);
     }
 
-    shmem_free(test_array);
+    shfree(test_array);
 
     return rc;
 }

@@ -84,7 +84,7 @@ static int test_item1(void)
     double report_end = 0;
     static double report_result = -1.0;
 
-    my_proc = shmem_my_pe();
+    my_proc = _my_pe();
 
     /* Warmup */
     rc = __do_warmup( 100 );

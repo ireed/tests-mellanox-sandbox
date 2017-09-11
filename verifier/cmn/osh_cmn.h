@@ -214,10 +214,10 @@ extern CONFIG osh_config;
         if (osh_config.active == 0) \
         { \
             get_mstat(&(osh_config.mstat)); \
-            shmem_init(); \
-            osh_config.my_pe = shmem_my_pe(); \
-            osh_config.num_pe = shmem_n_pes(); \
-            /*osh_config.rc = (int*)shmem_malloc(sizeof(int));*/ \
+           start_pes(0); \
+            osh_config.my_pe = _my_pe(); \
+            osh_config.num_pe = _num_pes(); \
+            /*osh_config.rc = (int*)shmalloc(sizeof(int));*/ \
             *osh_config.rc = 0; \
             osh_config.active = 1; \
         } \
@@ -236,7 +236,7 @@ extern CONFIG osh_config;
     { \
         if (osh_config.active == 1) \
         { \
-            /*shmem_free(osh_config.rc);*/ \
+            /*shfree(osh_config.rc);*/ \
             *osh_config.rc = 0; \
             shmem_finalize(); \
             osh_config.active = 0; \

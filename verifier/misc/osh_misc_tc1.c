@@ -46,13 +46,13 @@ int osh_misc_tc1(const TE_NODE *node, int argc, const char *argv[])
 static int test_item1(void)
 {
     int rc = TC_PASS;
-    int myPe = shmem_my_pe();
+    int myPe = _my_pe();
 	int myPeer = myPe + ( myPe % 2 ? -1 : 1 ) ;
-    int nPe = shmem_n_pes();
+    int nPe = _num_pes();
     int remainderPe = nPe - (nPe % 2);
 
     static int statArray[ARRAY_SIZE];
-    int* dynamicArray = shmem_malloc( ARRAY_SIZE * sizeof(int) );
+    int* dynamicArray = shmalloc( ARRAY_SIZE * sizeof(int) );
 
     int iterate;
     for (iterate = 0; iterate < ARRAY_SIZE; iterate++)
@@ -86,6 +86,6 @@ static int test_item1(void)
         shmem_barrier_all();
     }
 
-    shmem_free(dynamicArray);
+    shfree(dynamicArray);
     return rc;
 }

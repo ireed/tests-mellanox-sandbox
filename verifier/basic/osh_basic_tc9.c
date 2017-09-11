@@ -61,16 +61,16 @@ static int test_item1(void)
     int test_byte, expected_val;
     uint64_t max_heap_size_per_proc;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
     peer = (my_proc + 1) % num_proc;
 
     max_heap_size_per_proc = 1L << (sys_log2((memheap_size() * HEAP_USAGE_PERCENT)/ num_proc) - 1);
     max_heap_size_per_proc = (max_heap_size_per_proc > MAX_SIZE) ? MAX_SIZE : max_heap_size_per_proc;
-    buf = (char *)shmem_malloc(max_heap_size_per_proc * num_proc);
+    buf = (char *)shmalloc(max_heap_size_per_proc * num_proc);
     if (!buf)
     {
-        log_error(OSH_TC, "shmem_malloc(%lu)\n", max_heap_size_per_proc * num_proc);
+        log_error(OSH_TC, "shmalloc(%lu)\n", max_heap_size_per_proc * num_proc);
         return TC_SETUP_FAIL;
     }
 
@@ -103,7 +103,7 @@ static int test_item1(void)
 
     }
 
-    shmem_free(buf);
+    shfree(buf);
     log_debug(OSH_TC, rc == TC_PASS? "passed" : "failed");
     return rc;
 }

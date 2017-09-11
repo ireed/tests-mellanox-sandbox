@@ -49,18 +49,18 @@ static int mca_atomic_basic_init(int enable_progress_threads,
 {
     int rc = OSHMEM_SUCCESS;
     void* ptr = NULL;
-    int num_pe = shmem_n_pes();
+    int num_pe = _num_pes();
 
     UNREFERENCED_PARAMETER(enable_progress_threads);
     UNREFERENCED_PARAMETER(enable_threads);
 
-    ptr = shmem_malloc(num_pe * sizeof(char));
+    ptr = shmalloc(num_pe * sizeof(char));
     if(rc == OSHMEM_SUCCESS)
     {
         atomic_lock_sync = (char*)ptr;
         memset(atomic_lock_sync, ATOMIC_LOCK_IDLE, sizeof(char) * num_pe);
 
-        ptr = shmem_malloc(sizeof(int));
+        ptr = shmalloc(sizeof(int));
         if(rc == OSHMEM_SUCCESS)
         {
             atomic_lock_turn = (int*)ptr;
@@ -91,11 +91,11 @@ static int mca_atomic_basic_finalize(void)
     void* ptr = NULL;
 
     ptr = (void*)atomic_lock_sync;
-    shmem_free(ptr);
+    shfree(ptr);
     atomic_lock_sync = NULL;
 
     ptr = (void*)atomic_lock_turn;
-    shmem_free(ptr);
+    shfree(ptr);
     atomic_lock_turn = NULL;
 
     if (local_lock_sync)
@@ -116,8 +116,8 @@ static int mca_atomic_basic_finalize(void)
 static void atomic_basic_lock(int pe)
 {
     int index = -1;
-    int me = shmem_my_pe();
-    int num_pe = shmem_n_pes();
+    int me = _my_pe();
+    int num_pe = _num_pes();
     char lock_required = ATOMIC_LOCK_WAITING;
     char lock_active = ATOMIC_LOCK_ACTIVE;
     int root_pe = pe;
@@ -173,8 +173,8 @@ static void atomic_basic_lock(int pe)
 static void atomic_basic_unlock(int pe)
 {
     int index = -1;
-    int me = shmem_my_pe();
-    int num_pe = shmem_n_pes();
+    int me = _my_pe();
+    int num_pe = _num_pes();
     char lock_idle = ATOMIC_LOCK_IDLE;
     int root_pe = pe;
 
@@ -234,13 +234,13 @@ int osh_lock_tc4(const TE_NODE *node, int argc, const char *argv[])
 
 static int test_item1()
 {
-    int me = shmem_my_pe();
-    int num_pe = shmem_n_pes();
+    int me = _my_pe();
+    int num_pe = _num_pes();
     int res = TC_PASS;
     int writer = 0;
     const int number_of_iterations = 2; //num_pe - 1;
     const int number_of_write_attempts = 1;//00;
-    int *test_variable = shmem_malloc(sizeof(int) * 1);
+    int *test_variable = shmalloc(sizeof(int) * 1);
 
     mca_atomic_basic_init(0, 0);
 
@@ -277,7 +277,7 @@ static int test_item1()
         }
     }
 
-    shmem_free(test_variable);
+    shfree(test_variable);
 
     mca_atomic_basic_finalize();
 
@@ -286,11 +286,11 @@ static int test_item1()
 
 static int test_item2()
 {
-    int *remote_pe = shmem_malloc(sizeof(int));
+    int *remote_pe = shmalloc(sizeof(int));
     int number_of_iterations = 5;
     int number_of_checks = 2;
     int i = 0, j = 0;
-    int my_pe = shmem_my_pe();
+    int my_pe = _my_pe();
     int status = TC_PASS;
 
     mca_atomic_basic_init(0, 0);
@@ -328,7 +328,7 @@ static int test_item2()
     }
 
     shmem_barrier_all();
-    shmem_free(remote_pe);
+    shfree(remote_pe);
     mca_atomic_basic_finalize();
 
     return status;
@@ -345,11 +345,11 @@ static int test_item3(void)
     long original_value, prev_value, new_value, check_value;
     long *lock_value = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
-    lock_value = shmem_malloc(sizeof(*lock_value));
+    shmem_addr = shmalloc(sizeof(*shmem_addr));
+    lock_value = shmalloc(sizeof(*lock_value));
     *lock_value = 0;
 
     shmem_barrier_all();
@@ -378,10 +378,10 @@ static int test_item3(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
-    shmem_free(lock_value);
+    shfree(lock_value);
 
     return rc;
 }

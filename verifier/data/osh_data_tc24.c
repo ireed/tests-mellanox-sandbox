@@ -128,9 +128,9 @@ static int test_item1(void)
     int my_proc = 0;
     int peer_proc = 0;
 
-    my_proc = shmem_my_pe();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
+    shmem_addr = shmalloc(sizeof(*shmem_addr));
     if (shmem_addr)
     {
         /* Set my value */
@@ -168,7 +168,7 @@ static int test_item1(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -186,10 +186,10 @@ static int test_item2(void)
     int my_proc = 0;
     int peer_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
+    shmem_addr = shmalloc(sizeof(*shmem_addr));
     if (shmem_addr)
     {
         /* Set my value */
@@ -227,7 +227,7 @@ static int test_item2(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -245,9 +245,9 @@ static int test_item3(void)
     int my_proc = 0;
     int peer_proc = 0;
 
-    my_proc = shmem_my_pe();
+    my_proc = _my_pe();
 
-    shmem_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*shmem_addr) * __max_buffer_size);
+    shmem_addr = (TYPE_VALUE*)shmalloc(sizeof(*shmem_addr) * __max_buffer_size);
     send_addr = (TYPE_VALUE*)sys_malloc(sizeof(*send_addr) * __max_buffer_size);
     if (shmem_addr && send_addr)
     {
@@ -312,7 +312,7 @@ static int test_item3(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -331,10 +331,10 @@ static int test_item4(void)
     int my_proc = 0;
     int peer_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    shmem_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*shmem_addr) * __max_buffer_size);
+    shmem_addr = (TYPE_VALUE*)shmalloc(sizeof(*shmem_addr) * __max_buffer_size);
     send_addr = (TYPE_VALUE*)sys_malloc(sizeof(*send_addr) * __max_buffer_size);
     if (shmem_addr && send_addr)
     {
@@ -399,7 +399,7 @@ static int test_item4(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -418,8 +418,8 @@ static int test_item5(void)
     int my_proc = 0;
     int peer_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     {
         INT64_TYPE i = 0;

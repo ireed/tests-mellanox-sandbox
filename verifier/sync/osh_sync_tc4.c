@@ -43,7 +43,7 @@ int osh_sync_tc4(const TE_NODE *node, int argc, const char *argv[])
     UNREFERENCED_PARAMETER(argc);
     UNREFERENCED_PARAMETER(argv);
 
-    pSync = shmem_malloc(sizeof(*pSync) * _SHMEM_BARRIER_SYNC_SIZE);
+    pSync = shmalloc(sizeof(*pSync) * _SHMEM_BARRIER_SYNC_SIZE);
     if (!pSync)
     {
         rc = TC_SETUP_FAIL;
@@ -77,7 +77,7 @@ int osh_sync_tc4(const TE_NODE *node, int argc, const char *argv[])
 
     if (pSync)
     {
-        shmem_free(pSync);
+        shfree(pSync);
     }
 
     return rc;
@@ -99,8 +99,8 @@ static int test_item1(void)
     int my_proc = 0;
     int j = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     wait = sys_min(my_proc * WAIT_SEC, WAIT_MAX_SEC);
     expect_value = ( (num_proc - my_proc - 1) > 0 ? (num_proc - my_proc - 1) * WAIT_SEC - 2 : 0 );
@@ -139,8 +139,8 @@ static int test_item2(void)
     int my_proc = 0;
     int j = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     if (my_proc > 0)
     {
@@ -197,10 +197,10 @@ static int test_item3(void)
     int count_per_pair = 0;
     int j = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr));
+    shmem_addr = shmalloc(sizeof(*shmem_addr));
     if (shmem_addr)
     {
         peer_proc = ((my_proc == (num_proc - 1)) && (num_proc % 2) ? my_proc : (my_proc % 2 ? my_proc - 1 : my_proc + 1));
@@ -236,7 +236,7 @@ static int test_item3(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;

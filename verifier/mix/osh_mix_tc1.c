@@ -47,7 +47,7 @@ static int test_item1(void)
 {
     int rc = TC_PASS;
 
-    shmem_init();
+   start_pes(0);
 
     return rc;
 }

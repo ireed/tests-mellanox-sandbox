@@ -21,7 +21,7 @@
 int osh_lock_tc3(const TE_NODE *node, int argc, const char *argv[])
 {
     static long test_variable = 0;
-    //long *test_variable = shmem_malloc(sizeof(long));
+    //long *test_variable = shmalloc(sizeof(long));
     //*test_variable = 0;
 
     UNREFERENCED_PARAMETER(node);
@@ -35,7 +35,7 @@ int osh_lock_tc3(const TE_NODE *node, int argc, const char *argv[])
     }
     shmem_barrier_all();
 
-    //shmem_free(test_variable);
+    //shfree(test_variable);
     return TC_PASS;
 }
 

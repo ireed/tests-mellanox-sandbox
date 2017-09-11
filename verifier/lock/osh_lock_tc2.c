@@ -21,7 +21,7 @@
 int osh_lock_tc2(const TE_NODE *node, int argc, const char *argv[])
 {
     //This is a stress test which makes sure the distributed locking is not hanging
-    long *test_variable = shmem_malloc(sizeof(long));
+    long *test_variable = shmalloc(sizeof(long));
     int number_of_iterations = 10;
     int i = 0;
 
@@ -38,7 +38,7 @@ int osh_lock_tc2(const TE_NODE *node, int argc, const char *argv[])
     }
     shmem_barrier_all();
 
-    shmem_free(test_variable);
+    shfree(test_variable);
 
     return TC_PASS;
 }

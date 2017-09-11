@@ -22,8 +22,8 @@ int test_variable = 0;
 int osh_basic_tc7(const TE_NODE *node, int argc, const char *argv[])
 {
     int rc = TC_PASS;
-    int me = shmem_my_pe();
-    int num_of_pes = shmem_n_pes();
+    int me = _my_pe();
+    int num_of_pes = _num_pes();
     //static int test_variable = 0;
     int value_to_set = 1;
 

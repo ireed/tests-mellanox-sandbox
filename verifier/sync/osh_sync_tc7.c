@@ -62,9 +62,9 @@ static int test_item1(void)
 
     srand( (unsigned)time( NULL ) );
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
-    test_array = shmem_malloc(sizeof(long) * NNUM);
+    num_proc = _num_pes();
+    my_proc = _my_pe();
+    test_array = shmalloc(sizeof(long) * NNUM);
     local_array = malloc(sizeof(long) * NNUM);
 
     for (k = 0; k < NNUM; k++)
@@ -83,7 +83,7 @@ static int test_item1(void)
         shmem_barrier_all();
     }
 
-    shmem_free(test_array);  
+    shfree(test_array);  
     free(local_array);
 
     log_debug(OSH_TC, "passed");

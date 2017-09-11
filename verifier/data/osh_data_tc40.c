@@ -128,10 +128,10 @@ static int test_item1(void)
     int i = 0;
     int count = COUNT_VALUE;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr) * BUFFER_COUNT);
+    shmem_addr = shmalloc(sizeof(*shmem_addr) * BUFFER_COUNT);
     check_addr = local_check_addr;
 
     shmem_barrier_all();
@@ -179,7 +179,7 @@ static int test_item1(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -198,8 +198,8 @@ static int test_item2(void)
     int i = 0;
     int count = COUNT_VALUE;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     shmem_addr = static_shmem_addr;
     check_addr = local_check_addr;
@@ -262,10 +262,10 @@ static int test_item3(void)
     int i = 0;
     int count = COUNT_VALUE;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr) * BUFFER_COUNT);
+    shmem_addr = shmalloc(sizeof(*shmem_addr) * BUFFER_COUNT);
     check_addr = static_check_addr;
 
     shmem_barrier_all();
@@ -313,7 +313,7 @@ static int test_item3(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -331,8 +331,8 @@ static int test_item4(void)
     int i = 0;
     int count = COUNT_VALUE;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     shmem_addr = static_shmem_addr;
     check_addr = static_check_addr;
@@ -395,11 +395,11 @@ static int test_item5(void)
     int i = 0;
     int count = COUNT_VALUE;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(*shmem_addr) * BUFFER_COUNT);
-    check_addr = shmem_malloc(sizeof(*check_addr) * BUFFER_COUNT);
+    shmem_addr = shmalloc(sizeof(*shmem_addr) * BUFFER_COUNT);
+    check_addr = shmalloc(sizeof(*check_addr) * BUFFER_COUNT);
 
     shmem_barrier_all();
     if (shmem_addr && check_addr)
@@ -446,12 +446,12 @@ static int test_item5(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     if (check_addr)
     {
-        shmem_free(check_addr);
+        shfree(check_addr);
     }
 
     return rc;
@@ -469,11 +469,11 @@ static int test_item6(void)
     int i = 0;
     int count = COUNT_VALUE;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     shmem_addr = static_shmem_addr;
-    check_addr = shmem_malloc(sizeof(*check_addr) * BUFFER_COUNT);
+    check_addr = shmalloc(sizeof(*check_addr) * BUFFER_COUNT);
 
     shmem_barrier_all();
     if (shmem_addr && check_addr)
@@ -520,7 +520,7 @@ static int test_item6(void)
 
     if (check_addr)
     {
-        shmem_free(check_addr);
+        shfree(check_addr);
     }
 
     return rc;

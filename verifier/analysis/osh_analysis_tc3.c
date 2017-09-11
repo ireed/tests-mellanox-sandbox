@@ -76,7 +76,7 @@ int osh_analysis_tc3(const TE_NODE *node, int argc, const char *argv[])
 
     if (rc == TC_PASS)
     {
-        pSync = shmem_malloc(sizeof(*pSync) * _SHMEM_BCAST_SYNC_SIZE);
+        pSync = shmalloc(sizeof(*pSync) * _SHMEM_BCAST_SYNC_SIZE);
         if (!pSync)
         {
             rc = TC_SETUP_FAIL;
@@ -91,7 +91,7 @@ int osh_analysis_tc3(const TE_NODE *node, int argc, const char *argv[])
 
     if (pSync)
     {
-        shmem_free(pSync);
+        shfree(pSync);
     }
 
     return rc;
@@ -113,8 +113,8 @@ static int test_item1(void)
     double report_end = 0;
     static double report_result = -1.0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     /* Warmup */
     rc = __do_warmup( 100 );
@@ -123,8 +123,8 @@ static int test_item1(void)
     /* Main section */
     if (rc == TC_PASS)
     {
-        shmem_addr = (TYPE_VALUE*)shmem_malloc(__report_msize);
-        send_addr = (TYPE_VALUE*)shmem_malloc(__report_msize);
+        shmem_addr = (TYPE_VALUE*)shmalloc(__report_msize);
+        send_addr = (TYPE_VALUE*)shmalloc(__report_msize);
         if (shmem_addr && send_addr)
         {
             TYPE_VALUE expect_value = 0;
@@ -235,12 +235,12 @@ static int test_item1(void)
 
     if (send_addr)
     {
-        shmem_free(send_addr);
+        shfree(send_addr);
     }
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;

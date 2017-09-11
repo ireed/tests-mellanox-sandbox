@@ -38,7 +38,7 @@ int osh_coll_tc3(const TE_NODE *node, int argc, const char *argv[])
   UNREFERENCED_PARAMETER(argc);
   UNREFERENCED_PARAMETER(argv);
 
-  numprocs = shmem_n_pes();
+  numprocs = _num_pes();
 
   master = 1;
   nlong = 10;
@@ -54,7 +54,7 @@ int osh_coll_tc3(const TE_NODE *node, int argc, const char *argv[])
 
   pSync = NULL;
 
-  pSync = shmem_malloc(sizeof(long) *_SHMEM_COLLECT_SYNC_SIZE);
+  pSync = shmalloc(sizeof(long) *_SHMEM_COLLECT_SYNC_SIZE);
 
   for (ii=0; ii < _SHMEM_COLLECT_SYNC_SIZE; ii++) {
     pSync[ii] = _SHMEM_SYNC_VALUE;
@@ -64,17 +64,17 @@ int osh_coll_tc3(const TE_NODE *node, int argc, const char *argv[])
 
   /* Broadcast function             */
 
-  if (shmem_my_pe()%2 == 1)
+  if (_my_pe()%2 == 1)
     shmem_broadcast32(target, source, nlong, 0, 1, 1,
                     numprocs/2, pSync);     /* local master CPU = 0 */
 
-  if ((shmem_my_pe()%2 == 1) && (shmem_my_pe() != master))
+  if ((_my_pe()%2 == 1) && (_my_pe() != master))
     for (ii = 0; ii < nlong; ii++)
       if (target[ii] != (ii + 1))
         status = TC_FAIL;
 
   if (pSync) {
-    shmem_free(pSync);
+    shfree(pSync);
   }
   return status;
 }

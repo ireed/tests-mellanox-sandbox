@@ -47,7 +47,7 @@ int osh_coll_tc12(const TE_NODE *node, int argc, const char *argv[])
 
     if (rc == TC_PASS)
     {
-        pSync = shmem_malloc(sizeof(*pSync) * SHMEM_ALLTOALLS_SYNC_SIZE);
+        pSync = shmalloc(sizeof(*pSync) * SHMEM_ALLTOALLS_SYNC_SIZE);
         if (!pSync)
         {
             rc = TC_SETUP_FAIL;
@@ -98,7 +98,7 @@ int osh_coll_tc12(const TE_NODE *node, int argc, const char *argv[])
 
     if (pSync)
     {
-        shmem_free(pSync);
+        shfree(pSync);
     }
 
     return rc;
@@ -117,14 +117,14 @@ static int test_item1(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     count = 2;
     dst = 1;
     sst = 1;
-    dest = (int32_t *)shmem_malloc(count * dst * num_proc * sizeof(*dest));
-    source = (int32_t *)shmem_malloc(count * sst * num_proc * sizeof(*source));
+    dest = (int32_t *)shmalloc(count * dst * num_proc * sizeof(*dest));
+    source = (int32_t *)shmalloc(count * sst * num_proc * sizeof(*source));
 
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
@@ -156,8 +156,8 @@ static int test_item1(void)
         }
     }
     shmem_barrier_all();
-    shmem_free(dest);
-    shmem_free(source);
+    shfree(dest);
+    shfree(source);
 
     return rc;
 }
@@ -172,14 +172,14 @@ static int test_item2(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     count = 2;
     dst = 1;
     sst = 1;
-    dest = (int64_t *)shmem_malloc(count * dst * num_proc * sizeof(*dest));
-    source = (int64_t *)shmem_malloc(count * sst * num_proc * sizeof(*source));
+    dest = (int64_t *)shmalloc(count * dst * num_proc * sizeof(*dest));
+    source = (int64_t *)shmalloc(count * sst * num_proc * sizeof(*source));
 
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
@@ -211,8 +211,8 @@ static int test_item2(void)
         }
     }
     shmem_barrier_all();
-    shmem_free(dest);
-    shmem_free(source);
+    shfree(dest);
+    shfree(source);
 
     return rc;
 }
@@ -226,14 +226,14 @@ static int test_item3(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     count = 2;
     dst = 2;
     sst = 1;
-    dest = (int32_t *)shmem_malloc(count * dst * num_proc * sizeof(*dest));
-    source = (int32_t *)shmem_malloc(count * sst * num_proc * sizeof(*source));
+    dest = (int32_t *)shmalloc(count * dst * num_proc * sizeof(*dest));
+    source = (int32_t *)shmalloc(count * sst * num_proc * sizeof(*source));
 
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
@@ -265,8 +265,8 @@ static int test_item3(void)
         }
     }
     shmem_barrier_all();
-    shmem_free(dest);
-    shmem_free(source);
+    shfree(dest);
+    shfree(source);
 
     return rc;
 }
@@ -281,14 +281,14 @@ static int test_item4(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     count = 2;
     dst = 2;
     sst = 1;
-    dest = (int64_t *)shmem_malloc(count * dst * num_proc * sizeof(*dest));
-    source = (int64_t *)shmem_malloc(count * sst * num_proc * sizeof(*source));
+    dest = (int64_t *)shmalloc(count * dst * num_proc * sizeof(*dest));
+    source = (int64_t *)shmalloc(count * sst * num_proc * sizeof(*source));
 
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
@@ -320,8 +320,8 @@ static int test_item4(void)
         }
     }
     shmem_barrier_all();
-    shmem_free(dest);
-    shmem_free(source);
+    shfree(dest);
+    shfree(source);
 
     return rc;
 }
@@ -335,14 +335,14 @@ static int test_item5(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     count = 2;
     dst = 1;
     sst = 2;
-    dest = (int32_t *)shmem_malloc(count * dst * num_proc * sizeof(*dest));
-    source = (int32_t *)shmem_malloc(count * sst * num_proc * sizeof(*source));
+    dest = (int32_t *)shmalloc(count * dst * num_proc * sizeof(*dest));
+    source = (int32_t *)shmalloc(count * sst * num_proc * sizeof(*source));
 
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
@@ -374,8 +374,8 @@ static int test_item5(void)
         }
     }
     shmem_barrier_all();
-    shmem_free(dest);
-    shmem_free(source);
+    shfree(dest);
+    shfree(source);
 
     return rc;
 }
@@ -390,14 +390,14 @@ static int test_item6(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     count = 2;
     dst = 1;
     sst = 2;
-    dest = (int64_t *)shmem_malloc(count * dst * num_proc * sizeof(*dest));
-    source = (int64_t *)shmem_malloc(count * sst * num_proc * sizeof(*source));
+    dest = (int64_t *)shmalloc(count * dst * num_proc * sizeof(*dest));
+    source = (int64_t *)shmalloc(count * sst * num_proc * sizeof(*source));
 
     /* assign source values */
     for (pe = 0; pe < num_proc; pe++) {
@@ -429,8 +429,8 @@ static int test_item6(void)
         }
     }
     shmem_barrier_all();
-    shmem_free(dest);
-    shmem_free(source);
+    shfree(dest);
+    shfree(source);
 
     return rc;
 }

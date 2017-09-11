@@ -19,12 +19,12 @@ const TE_NODE basic_tcs[] =
 {
     { NULL, osh_basic_tc1,  "start",    aopt_set_string( "tc1" ),   "Check failure cases during OpenSHMEM start.", TEST_RUN},
     { NULL, osh_basic_tc2,  "whoami",   aopt_set_string( "tc2" ),   "Identify itself and number of PEs.",          TEST_RUN},
-    { NULL, osh_basic_tc3,  "shmem_malloc",	aopt_set_string( "tc3" ),   "Global Address Space.",                       TEST_RUN},
+    { NULL, osh_basic_tc3,  "shmalloc",	aopt_set_string( "tc3" ),   "Global Address Space.",                       TEST_RUN},
     { NULL, osh_basic_tc4,  "get",      aopt_set_string( "tc4" ),   "Elemental Data Get Routine.",                 TEST_RUN},
     { NULL, osh_basic_tc5,  "put",      aopt_set_string( "tc5" ),   "Elemental Data Put Routine.",                 TEST_RUN},
     { NULL, osh_basic_tc6,  "barrier",  aopt_set_string( "tc6" ),   "Barrier Synchronization Routine.",            TEST_RUN},
     { NULL, osh_basic_tc7,  "static",   aopt_set_string( "tc7" ),   "Static variables test.",                      TEST_IGNORE},
-    { NULL, osh_basic_tc8,  "heap",     aopt_set_string( "tc8" ),   "Stressing shmem_malloc test.",                    TEST_RUN},
+    { NULL, osh_basic_tc8,  "heap",     aopt_set_string( "tc8" ),   "Stressing shmalloc test.",                    TEST_RUN},
     { NULL, osh_basic_tc9,  "fence",    aopt_set_string( "tc9" ),   "Basic fence test.",                           TEST_RUN},
     { NULL, NULL,           NULL,       aopt_set_string( NULL ),    NULL, TEST_IGNORE}
 };

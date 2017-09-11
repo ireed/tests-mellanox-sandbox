@@ -154,7 +154,7 @@ static int test_item1(void)
     int rc = TC_PASS;
     int* shmem_addr = NULL;
 
-    shmem_addr = shmem_malloc(sizeof(int));
+    shmem_addr = shmalloc(sizeof(int));
 
     rc = (shmem_addr ? TC_PASS : TC_FAIL);
 
@@ -162,7 +162,7 @@ static int test_item1(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -173,9 +173,9 @@ static int test_item2(void)
 {
     int rc = TC_PASS;
     int* shmem_addr = NULL;
-    int value = shmem_my_pe();
+    int value = _my_pe();
 
-    shmem_addr = shmem_malloc(sizeof(int));
+    shmem_addr = shmalloc(sizeof(int));
 
     if (shmem_addr)
     {
@@ -191,7 +191,7 @@ static int test_item2(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -208,7 +208,7 @@ static int test_item3(void)
 
     for (i = 0; i < LOOP_COUNT; i++)
     {
-        shmem_addr[i] = shmem_malloc(sizeof(int));
+        shmem_addr[i] = shmalloc(sizeof(int));
         if (!shmem_addr[i])
         {
             rc = TC_FAIL;
@@ -221,7 +221,7 @@ static int test_item3(void)
     {
         if (shmem_addr[i])
         {
-            shmem_free(shmem_addr[i]);
+            shfree(shmem_addr[i]);
         }
     }
 
@@ -234,10 +234,10 @@ static int test_item4(void)
 {
     int rc = TC_PASS;
     int* shmem_addr = NULL;
-    int value = shmem_my_pe();
+    int value = _my_pe();
     int i = 0;
 
-    shmem_addr = shmem_malloc(sizeof(int));
+    shmem_addr = shmalloc(sizeof(int));
 
     if (shmem_addr)
     {
@@ -252,7 +252,7 @@ static int test_item4(void)
 
     for (i = 0; (!rc) && (i < LOOP_COUNT); i++)
     {
-        value = shmem_my_pe() * 100000 + random_value(1, 100000);
+        value = _my_pe() * 100000 + random_value(1, 100000);
         *shmem_addr = value;
         if (*shmem_addr != value)
         {
@@ -264,7 +264,7 @@ static int test_item4(void)
 
     if (shmem_addr)
     {
-        shmem_free(shmem_addr);
+        shfree(shmem_addr);
     }
 
     return rc;
@@ -278,7 +278,7 @@ static int test_64bit_align(void)
 
     for (i = 0; i < LOOP_COUNT; i++)
     {
-        p[i] = shmem_malloc(2*i+3);
+        p[i] = shmalloc(2*i+3);
         if (!p[i])
         {
             rc = TC_FAIL;
@@ -292,7 +292,7 @@ static int test_64bit_align(void)
     }
     for (i = 0; i < LOOP_COUNT; i++)
     {
-        shmem_free(p[i]);
+        shfree(p[i]);
     }
     return rc;
 }
@@ -305,7 +305,7 @@ static int test_memalign(void)
     /* test that we get desired alignments */
     for (align = 1; align <= 4096; align *= 2)
     {
-       p = shmem_align(align, 37);
+       p = shmemalign(align, 37);
        if (!p)
        {
            log_debug(OSH_TC, "failed to alloc with align = %d\n", align);
@@ -316,17 +316,17 @@ static int test_memalign(void)
            log_debug(OSH_TC, "failed to alloc with align = %d\n", align);
            return TC_FAIL;
        }
-       shmem_free(p);
+       shfree(p);
     }
 
     /* test some corner cases */
-    p = shmem_align(0, 100);
+    p = shmemalign(0, 100);
     if (p) {
         log_debug(OSH_TC, "align zero returnded valid ptr!!!\n");
         return TC_FAIL;
     }
 
-    p = shmem_align(3, 100);
+    p = shmemalign(3, 100);
     if (p) {
         log_debug(OSH_TC, "align non power of two returnded valid ptr!!!\n");
         return TC_FAIL;
@@ -352,13 +352,13 @@ static int test_realloc()
 {
     char *p1, *p2;
 
-    p1 = shmem_malloc(999);
+    p1 = shmalloc(999);
     if (!p1)
         return TC_FAIL;
 
     memset(p1, 0xEF, 999);
 
-    p2 = shmem_realloc(p1, 42);
+    p2 = shrealloc(p1, 42);
     if (!p2)
     {
         log_debug(OSH_TC, "Failed to realloc\n");
@@ -371,7 +371,7 @@ static int test_realloc()
         return TC_FAIL;
     }
 
-    p1 = shmem_realloc(p2, 1717);
+    p1 = shrealloc(p2, 1717);
     if (!p1)
     {
         log_debug(OSH_TC, "Failed to realloc from 42 to 1717\n");
@@ -384,41 +384,41 @@ static int test_realloc()
     }
 
     /* corner cases */
-    p2 = shmem_realloc(p1, 0); /* works as shmem_free() */
+    p2 = shrealloc(p1, 0); /* works as shfree() */
     if (p2)
     {
-        log_debug(OSH_TC, "failed shmem_realloc as shmem_free()\n");
+        log_debug(OSH_TC, "failed shrealloc as shfree()\n");
         return TC_FAIL;
     }
 
-    p1 = shmem_realloc(0, 333); /* works as malloc() */
+    p1 = shrealloc(0, 333); /* works as malloc() */
     if (!p1)
     {
-        log_debug(OSH_TC, "failed shmem_realloc as shmem_malloc()\n");
+        log_debug(OSH_TC, "failed shrealloc as shmalloc()\n");
         return TC_FAIL;
     }
-    shmem_free(p1);
+    shfree(p1);
 
     /* should not be able to realloc non valid ptr */
-    p2 = shmem_realloc(p1, 666);
+    p2 = shrealloc(p1, 666);
     if (p2) {
-        log_debug(OSH_TC, "failed shmem_realloc with non valid ptr\n");
+        log_debug(OSH_TC, "failed shrealloc with non valid ptr\n");
         return TC_FAIL;
     }
 
     /* should be able to realloc if old_size + new_size > heap_size && new_size <= heap_size */
-    p1 = shmem_malloc(16);
+    p1 = shmalloc(16);
     if (!p1) {
-        log_debug(OSH_TC, "shmem_malloc(16) failed");
+        log_debug(OSH_TC, "shmalloc(16) failed");
         return TC_FAIL;
     }
 
-    p2 = shmem_realloc(p1, memheap_size());
+    p2 = shrealloc(p1, memheap_size());
     if (!p2) {
-        log_debug(OSH_TC, "failed shmem_realloc to %d bytes\n", memheap_size());
+        log_debug(OSH_TC, "failed shrealloc to %d bytes\n", memheap_size());
         return TC_FAIL;
     }
-    shmem_free(p2);
+    shfree(p2);
 
     return TC_PASS;
 }
@@ -427,8 +427,8 @@ int __global_foo = 4242;
 
 static int test_addr_accessible()
 {
-    int my_pe = shmem_my_pe();
-    int n_pes = shmem_n_pes();
+    int my_pe = _my_pe();
+    int n_pes = _num_pes();
     int pe = (my_pe + 1) % n_pes;
     static int foo;
     char *p1;
@@ -443,13 +443,13 @@ static int test_addr_accessible()
    if (shmem_addr_accessible(&__global_foo, pe))
        return TC_PASS;
 
-   p1 = (char *)shmem_malloc(1234);
+   p1 = (char *)shmalloc(1234);
    if (!shmem_addr_accessible(p1, pe))
    {
-       shmem_free(p1);
+       shfree(p1);
        return TC_FAIL;
    }
-   shmem_free(p1);
+   shfree(p1);
    return TC_PASS;
 
 }
@@ -460,12 +460,12 @@ static int test_max_size(void)
     char *p;
     int size = 256 * 1024 * 1024; // this is default symmetric heap size
 
-    p = shmem_malloc(size);
+    p = shmalloc(size);
     if (!p) {
         log_debug(OSH_TC, "Failed to use all(%d) symmetric heap memory", size);
         return TC_FAIL;
     }
-    shmem_free(p);
+    shfree(p);
 #endif
     return TC_PASS;
 }
@@ -480,40 +480,40 @@ static int test_allocation_size(void)
 
     for (size = 4 * 1024; (size <= 1024 * 1024) && (rc == TC_PASS); size *= 2)
     {
-        p1 = (char *)shmem_malloc(size);
-        p2 = (char *)shmem_malloc(size);
+        p1 = (char *)shmalloc(size);
+        p2 = (char *)shmalloc(size);
 
         if (p1 && p2)
         {
             log_debug(OSH_TC, "p1=%p p2=%p size = %d delta=%ld\n", p1, p2, size, p2-p1);
             if (memheap_type() == MEMHEAP_ALLOC_BUDDY && (((unsigned long)p1 & (size-1)) || ((unsigned long)p2 & (size-1))))
             {
-                log_debug(OSH_TC, "shmem_malloc returned not aligned buffer!!!\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc returned not aligned buffer!!!\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
 
             if (p2 > p1 && p2 - p1 < size)
             {
-                log_debug(OSH_TC, "shmem_malloc logic fail\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc logic fail\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
             if (p1 > p2 && p1 - p2 < size)
             {
-                log_debug(OSH_TC, "shmem_malloc logic fail\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc logic fail\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
 
-            shmem_free(p1);
-            shmem_free(p2);
+            shfree(p1);
+            shfree(p2);
         }
         else
         {
@@ -524,8 +524,8 @@ static int test_allocation_size(void)
     for (cur_size = 1024; (cur_size <= 1024 * 1024) && (rc == TC_PASS); cur_size *= 2)
     {
         size = cur_size - 1;
-        p1 = (char *)shmem_malloc(size);
-        p2 = (char *)shmem_malloc(size);
+        p1 = (char *)shmalloc(size);
+        p2 = (char *)shmalloc(size);
 
         if (p1 && p2)
         {
@@ -533,32 +533,32 @@ static int test_allocation_size(void)
 
             if (memheap_type() == MEMHEAP_ALLOC_BUDDY && (((unsigned long)p1 & (size-1)) || ((unsigned long)p2 & (size-1))))
             {
-                log_debug(OSH_TC, "shmem_malloc returned not aligned buffer!!!\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc returned not aligned buffer!!!\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
 
             if (p2 > p1 && p2 - p1 < size)
             {
-                log_debug(OSH_TC, "shmem_malloc logic fail\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc logic fail\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
             if (p1 > p2 && p1 - p2 < size)
             {
-                log_debug(OSH_TC, "shmem_malloc logic fail\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc logic fail\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
 
-            shmem_free(p1);
-            shmem_free(p2);
+            shfree(p1);
+            shfree(p2);
         }
         else
         {
@@ -569,40 +569,40 @@ static int test_allocation_size(void)
     for (cur_size = 1024; (cur_size <= 1024 * 1024) && (rc == TC_PASS); cur_size *= 2)
     {
         size = cur_size + 1;
-        p1 = (char *)shmem_malloc(size);
-        p2 = (char *)shmem_malloc(size);
+        p1 = (char *)shmalloc(size);
+        p2 = (char *)shmalloc(size);
 
         if (p1 && p2)
         {
             log_debug(OSH_TC, "p1=%p p2=%p size = %d delta=%ld\n", p1, p2, size, p2-p1);
             if (memheap_type() == MEMHEAP_ALLOC_BUDDY && (((unsigned long)p1 & (size-1)) || ((unsigned long)p2 & (size-1))))
             {
-                log_debug(OSH_TC, "shmem_malloc returned not aligned buffer!!!\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc returned not aligned buffer!!!\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
 
             if (p2 > p1 && p2 - p1 < size)
             {
-                log_debug(OSH_TC, "shmem_malloc logic fail\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc logic fail\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
             if (p1 > p2 && p1 - p2 < size)
             {
-                log_debug(OSH_TC, "shmem_malloc logic fail\n");
-                shmem_free(p1);
-                shmem_free(p2);
+                log_debug(OSH_TC, "shmalloc logic fail\n");
+                shfree(p1);
+                shfree(p2);
 
                 return TC_FAIL;
             }
 
-            shmem_free(p1);
-            shmem_free(p2);
+            shfree(p1);
+            shfree(p2);
         }
         else
         {
@@ -626,8 +626,8 @@ static int test_global_vars()
     extern int *oshmem_get_int_buf(void);
     int *p;
 
-    num_proc = shmem_n_pes();
-    my_pe = shmem_my_pe();
+    num_proc = _num_pes();
+    my_pe = _my_pe();
     peer = (my_pe + 1) % num_proc;
     p = oshmem_get_int_buf();
 

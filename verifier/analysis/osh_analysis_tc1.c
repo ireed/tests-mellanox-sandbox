@@ -108,8 +108,8 @@ static int test_item1(void)
     long i = 0;
     static float report_result = -1.0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
 #if 0 /* this section set the same __report_cycles for all PEs */
     if (my_proc == 0)

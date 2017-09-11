@@ -69,12 +69,12 @@ static int test_item1(void)
     int type = 2;
     double t_start = 0.0, t_end = 0.0;
 
-    myid = shmem_my_pe();
+    myid = _my_pe();
 
     align_size = MESSAGE_ALIGNMENT;
 
     // Allocate a variable from the symmetric heap
-    sh_buf = (char *)shmem_malloc(MYBUFSIZE);
+    sh_buf = (char *)shmalloc(MYBUFSIZE);
     if (sh_buf)
     {
         s_buf =
@@ -167,7 +167,7 @@ static int test_item1(void)
 
     if (sh_buf)
     {
-        shmem_free(sh_buf);
+        shfree(sh_buf);
     }
 
     return rc;

@@ -22,12 +22,12 @@
 int osh_lock_tc1(const TE_NODE *node, int argc, const char *argv[])
 {
     //static long test_variable = 0;
-    long *test_variable = shmem_malloc(sizeof(long));
-    int *remote_pe = shmem_malloc(sizeof(int));
+    long *test_variable = shmalloc(sizeof(long));
+    int *remote_pe = shmalloc(sizeof(int));
     int number_of_iterations = 5;
     int number_of_checks = 2;
     int i = 0, j = 0;
-    int my_pe = shmem_my_pe();
+    int my_pe = _my_pe();
     int status = TC_PASS;
 
     UNREFERENCED_PARAMETER(node);
@@ -67,8 +67,8 @@ int osh_lock_tc1(const TE_NODE *node, int argc, const char *argv[])
     }
 
     shmem_barrier_all();
-    shmem_free(test_variable);
-    shmem_free(remote_pe);
+    shfree(test_variable);
+    shfree(remote_pe);
 
     return status;
 }

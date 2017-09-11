@@ -82,7 +82,7 @@ int osh_reduce_tc12(const TE_NODE *node, int argc, const char *argv[])
 
     if (rc == TC_PASS)
     {
-        pSync = shmem_malloc(sizeof(*pSync) * _SHMEM_REDUCE_SYNC_SIZE);
+        pSync = shmalloc(sizeof(*pSync) * _SHMEM_REDUCE_SYNC_SIZE);
         if (!pSync)
         {
             rc = TC_SETUP_FAIL;
@@ -169,7 +169,7 @@ int osh_reduce_tc12(const TE_NODE *node, int argc, const char *argv[])
 
     if (pSync)
     {
-        shmem_free(pSync);
+        shfree(pSync);
     }
 
     return rc;
@@ -188,13 +188,13 @@ static int test_item1(void)
     TYPE_VALUE expect_value = 0;
     int my_proc = 0;
 
-    my_proc = shmem_my_pe();
+    my_proc = _my_pe();
 
-    pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+    pWrk = shmalloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
     if (pWrk)
     {
-        target_addr = shmem_malloc(sizeof(*target_addr));
-        source_addr = shmem_malloc(sizeof(*source_addr));
+        target_addr = shmalloc(sizeof(*target_addr));
+        source_addr = shmalloc(sizeof(*source_addr));
     }
 
     if (target_addr && source_addr)
@@ -249,17 +249,17 @@ static int test_item1(void)
 
     if (source_addr)
     {
-        shmem_free(source_addr);
+        shfree(source_addr);
     }
 
     if (target_addr)
     {
-        shmem_free(target_addr);
+        shfree(target_addr);
     }
 
     if (pWrk)
     {
-        shmem_free(pWrk);
+        shfree(pWrk);
         pWrk = NULL;
     }
 
@@ -277,15 +277,15 @@ static int test_item2(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
 
-    pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+    pWrk = shmalloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
     if (pWrk)
     {
-        target_addr = shmem_malloc(sizeof(*target_addr));
-        source_addr = shmem_malloc(sizeof(*source_addr));
+        target_addr = shmalloc(sizeof(*target_addr));
+        source_addr = shmalloc(sizeof(*source_addr));
     }
 
     if (target_addr && source_addr)
@@ -344,17 +344,17 @@ static int test_item2(void)
 
     if (source_addr)
     {
-        shmem_free(source_addr);
+        shfree(source_addr);
     }
 
     if (target_addr)
     {
-        shmem_free(target_addr);
+        shfree(target_addr);
     }
 
     if (pWrk)
     {
-        shmem_free(pWrk);
+        shfree(pWrk);
         pWrk = NULL;
     }
 
@@ -371,12 +371,12 @@ static int test_item3(void)
     TYPE_VALUE expect_value = 0;
     int my_proc = 0;
 
-    my_proc = shmem_my_pe();
+    my_proc = _my_pe();
 
-    pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+    pWrk = shmalloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
     if (pWrk)
     {
-        source_addr = shmem_malloc(sizeof(*source_addr));
+        source_addr = shmalloc(sizeof(*source_addr));
         target_addr = source_addr;
     }
 
@@ -429,12 +429,12 @@ static int test_item3(void)
 
     if (source_addr)
     {
-        shmem_free(source_addr);
+        shfree(source_addr);
     }
 
     if (pWrk)
     {
-        shmem_free(pWrk);
+        shfree(pWrk);
         pWrk = NULL;
     }
 
@@ -452,14 +452,14 @@ static int test_item4(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
 
-    pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+    pWrk = shmalloc(sizeof(*pWrk) * sys_max(1/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
     if (pWrk)
     {
-        source_addr = shmem_malloc(sizeof(*source_addr));
+        source_addr = shmalloc(sizeof(*source_addr));
         target_addr = source_addr;
     }
 
@@ -516,12 +516,12 @@ static int test_item4(void)
 
     if (source_addr)
     {
-        shmem_free(source_addr);
+        shfree(source_addr);
     }
 
     if (pWrk)
     {
-        shmem_free(pWrk);
+        shfree(pWrk);
         pWrk = NULL;
     }
 
@@ -538,10 +538,10 @@ static int test_item5(void)
     TYPE_VALUE expect_value = 0;
     int my_proc = 0;
 
-    my_proc = shmem_my_pe();
+    my_proc = _my_pe();
 
-    target_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*target_addr) * __max_buffer_size);
-    source_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*source_addr) * __max_buffer_size);
+    target_addr = (TYPE_VALUE*)shmalloc(sizeof(*target_addr) * __max_buffer_size);
+    source_addr = (TYPE_VALUE*)shmalloc(sizeof(*source_addr) * __max_buffer_size);
     if (target_addr && source_addr)
     {
         TYPE_VALUE value = DEFAULT_VALUE;
@@ -552,7 +552,7 @@ static int test_item5(void)
         for (i = 0; (i < __cycle_count) && (rc == TC_PASS); i++)
         {
             cur_buf_size = sys_max(1, (i + 1) * __max_buffer_size / __cycle_count);
-            pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+            pWrk = shmalloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
             if (pWrk)
             {
                 /* Set initial target value */
@@ -612,7 +612,7 @@ static int test_item5(void)
                     show_buffer(check_addr + show_index, show_size);
                 }
 
-                shmem_free(pWrk);
+                shfree(pWrk);
             } else {
                 rc = TC_SETUP_FAIL;
             }
@@ -625,12 +625,12 @@ static int test_item5(void)
 
     if (source_addr)
     {
-        shmem_free(source_addr);
+        shfree(source_addr);
     }
 
     if (target_addr)
     {
-        shmem_free(target_addr);
+        shfree(target_addr);
     }
 
     return rc;
@@ -647,11 +647,11 @@ static int test_item6(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    target_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*target_addr) * __max_buffer_size);
-    source_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*source_addr) * __max_buffer_size);
+    target_addr = (TYPE_VALUE*)shmalloc(sizeof(*target_addr) * __max_buffer_size);
+    source_addr = (TYPE_VALUE*)shmalloc(sizeof(*source_addr) * __max_buffer_size);
     if (target_addr && source_addr)
     {
         TYPE_VALUE value = DEFAULT_VALUE;
@@ -662,7 +662,7 @@ static int test_item6(void)
         for (i = 0; (i < __cycle_count) && (rc == TC_PASS); i++)
         {
             cur_buf_size = sys_max(1, (i + 1) * __max_buffer_size / __cycle_count);
-            pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+            pWrk = shmalloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
             if (pWrk)
             {
                 /* Set initial target value */
@@ -726,7 +726,7 @@ static int test_item6(void)
                     show_buffer(check_addr + show_index, show_size);
                 }
 
-                shmem_free(pWrk);
+                shfree(pWrk);
             } else {
                 rc = TC_SETUP_FAIL;
             }
@@ -739,12 +739,12 @@ static int test_item6(void)
 
     if (source_addr)
     {
-        shmem_free(source_addr);
+        shfree(source_addr);
     }
 
     if (target_addr)
     {
-        shmem_free(target_addr);
+        shfree(target_addr);
     }
 
     return rc;
@@ -761,11 +761,11 @@ static int test_item7(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    target_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*target_addr) * __max_buffer_size);
-    source_addr = (TYPE_VALUE*)shmem_malloc(sizeof(*source_addr) * __max_buffer_size);
+    target_addr = (TYPE_VALUE*)shmalloc(sizeof(*target_addr) * __max_buffer_size);
+    source_addr = (TYPE_VALUE*)shmalloc(sizeof(*source_addr) * __max_buffer_size);
     if (target_addr && source_addr)
     {
         TYPE_VALUE value = DEFAULT_VALUE;
@@ -776,7 +776,7 @@ static int test_item7(void)
         for (i = 0; (i < __cycle_count) && (rc == TC_PASS); i++)
         {
             cur_buf_size = sys_max(1, (i + 1) * __max_buffer_size / __cycle_count);
-            pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+            pWrk = shmalloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
             if (pWrk)
             {
                 /* Set initial target value */
@@ -846,7 +846,7 @@ static int test_item7(void)
                     show_buffer(check_addr + show_index, show_size);
                 }
 
-                shmem_free(pWrk);
+                shfree(pWrk);
             } else {
                 rc = TC_SETUP_FAIL;
             }
@@ -859,12 +859,12 @@ static int test_item7(void)
 
     if (source_addr)
     {
-        shmem_free(source_addr);
+        shfree(source_addr);
     }
 
     if (target_addr)
     {
-        shmem_free(target_addr);
+        shfree(target_addr);
     }
 
     return rc;
@@ -881,8 +881,8 @@ static int test_item8(void)
     int num_proc = 0;
     int my_proc = 0;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
     {
         TYPE_VALUE value = DEFAULT_VALUE;
@@ -893,7 +893,7 @@ static int test_item8(void)
         for (i = 0; (i < __cycle_count) && (rc == TC_PASS); i++)
         {
             cur_buf_size = sys_max(1, (i + 1) * MAX_BUFFER_SIZE / __cycle_count);
-            pWrk = shmem_malloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+            pWrk = shmalloc(sizeof(*pWrk) * sys_max(cur_buf_size/2 + 1, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
             if (pWrk)
             {
                 /* Set initial target value */
@@ -963,7 +963,7 @@ static int test_item8(void)
                     show_buffer(check_addr + show_index, show_size);
                 }
 
-                shmem_free(pWrk);
+                shfree(pWrk);
             } else {
                 rc = TC_SETUP_FAIL;
             }
@@ -988,10 +988,10 @@ static int test_item9(void)
     int pSyncNum = 2;
     int pWrkNum = 2;
 
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
 
-    pSyncMult = shmem_malloc(sizeof(*pSyncMult) * pSyncNum * _SHMEM_REDUCE_SYNC_SIZE);
+    pSyncMult = shmalloc(sizeof(*pSyncMult) * pSyncNum * _SHMEM_REDUCE_SYNC_SIZE);
     if (pSyncMult)
     {
         TYPE_VALUE value = DEFAULT_VALUE;
@@ -1007,7 +1007,7 @@ static int test_item9(void)
         /* Give some time to all PE for setting their values */
         shmem_barrier_all();
 
-        pWrkMult = shmem_malloc(sizeof(*pWrkMult) * pWrkNum * sys_max(MAX_BUFFER_SIZE, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
+        pWrkMult = shmalloc(sizeof(*pWrkMult) * pWrkNum * sys_max(MAX_BUFFER_SIZE, _SHMEM_REDUCE_MIN_WRKDATA_SIZE));
         if (pWrkMult)
         {
             value = DEFAULT_VALUE;
@@ -1058,11 +1058,11 @@ static int test_item9(void)
                 fill_buffer((void *)(source_addr + (i % 2) * MAX_BUFFER_SIZE), cur_buf_size, (void *)&source_value, sizeof(source_value));
                 fill_buffer((void *)(target_addr + (i % 2) * MAX_BUFFER_SIZE ), cur_buf_size, (void *)&value, sizeof(value));
             }
-            shmem_free(pWrkMult);
+            shfree(pWrkMult);
         } else {
             rc = TC_SETUP_FAIL;
         }
-        shmem_free(pSyncMult);
+        shfree(pSyncMult);
     } else {
         rc = TC_SETUP_FAIL;
     }

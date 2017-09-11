@@ -11,13 +11,13 @@ static int TEST_NAME(void)
     TYPE i;
     TYPE *buf;
     
-    num_proc = shmem_n_pes();
-    my_proc = shmem_my_pe();
+    num_proc = _num_pes();
+    my_proc = _my_pe();
     peer = (my_proc + 1) % num_proc;
-    buf = (TYPE *)shmem_malloc(sizeof(TYPE));
+    buf = (TYPE *)shmalloc(sizeof(TYPE));
     if (!buf)
     {
-        log_error(OSH_TC, "shmem_malloc\n");
+        log_error(OSH_TC, "shmalloc\n");
         return TC_FAIL;
     }
     log_debug(OSH_TC, "%d: buf = %p\n", my_proc, buf);
@@ -27,7 +27,7 @@ static int TEST_NAME(void)
     if (setjmp(error_env))
     {
         log_fatal(OSH_TC, "Test failed on i=%d buf[0]=%d\n", i, buf[0]);
-        shmem_free(buf);
+        shfree(buf);
         return TC_FAIL;
     }
     for (i = 0; i < MAX_COUNT; i++) 
@@ -44,11 +44,11 @@ static int TEST_NAME(void)
         if (buf[0] == i-1)
         {
             log_fatal(OSH_TC, "Test failed on i=%d buf[0]=%d\n", i, buf[0]);
-            shmem_free(buf);
+            shfree(buf);
             return TC_FAIL;
         }
     }
-    shmem_free(buf);
+    shfree(buf);
     log_debug(OSH_TC, "passed");
     return rc;
 }
