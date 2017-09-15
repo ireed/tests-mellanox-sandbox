@@ -224,10 +224,6 @@ oshmem_test_SOURCES = \
 	strided/osh_strided_tc19.c \
 	strided/osh_strided_tc10.c \
 	strided/osh_strided_tc20.c \
-	mix/osh_mix.c \
-	mix/osh_mix_tc1.c \
-	mix/osh_mix_tc2.c \
-	mix/osh_mix_tc3.c \
 	analysis/osh_analysis.c \
 	analysis/osh_analysis_tc1.c \
 	analysis/osh_analysis_tc2.c \
@@ -248,6 +244,14 @@ if HAVE_ALLTOALL
 oshmem_test_SOURCES += \
 	coll/osh_coll_tc11.c \
 	coll/osh_coll_tc12.c
+endif
+
+if HAVE_MPI
+oshmem_test_SOURCES += \
+	mix/osh_mix.c \
+	mix/osh_mix_tc1.c \
+	mix/osh_mix_tc2.c \
+	mix/osh_mix_tc3.c
 endif
 
 clean-local:

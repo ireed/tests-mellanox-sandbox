@@ -36,5 +36,12 @@ AC_CHECK_DECLS([shmem_alltoall32, shmem_alltoall64],
     ],
     [AM_CONDITIONAL([HAVE_ALLTOALL],[false])], [#include "shmem.h"])
 
+dnl Check for MPI lib
+AC_CHECK_LIB([mpi], [MPI_Init],
+    [AM_CONDITIONAL([HAVE_MPI],[true])
+     CFLAGS="$CFLAGS -DHAVE_MPI"
+    ],
+    [AM_CONDITIONAL([HAVE_MPI],[false])])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

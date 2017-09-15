@@ -43,7 +43,6 @@ int osh_mix_tc2(const TE_NODE *node, int argc, const char *argv[])
 /****************************************************************************
  * Place for Test Item functions
  ***************************************************************************/
-/*
 static int test_item1(void)
 {
     int rc = TC_PASS;
@@ -172,4 +171,3 @@ static int test_item1(void)
 
     return rc;
 }
-*/

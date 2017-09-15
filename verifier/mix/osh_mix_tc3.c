@@ -96,7 +96,6 @@ static void error_handler (int err)
  * The root sends the total number of processes to all the other PEs
  * using broadcast.
  */
-/*
 static int mix_mpi_shmem_test (void)
 {
     int dest, source, prev, next;
@@ -340,7 +339,6 @@ static int mix_mpi_shmem_test (void)
     }
     return err;
 }
-*/
 
 int osh_mix_tc3 (const TE_NODE * node, int argc, const char *argv[])
 {
@@ -349,16 +347,16 @@ int osh_mix_tc3 (const TE_NODE * node, int argc, const char *argv[])
     UNREFERENCED_PARAMETER (argv);
 
    // MPI_Init (&argc, &bb);
-   //start_pes(0);
+   start_pes(0);
 
-    //rc = mix_mpi_shmem_test ();
-    //log_item (node, 1, rc);
+    rc = mix_mpi_shmem_test ();
+    log_item (node, 1, rc);
 
     if (rc != TC_PASS) {
         error_handler (rc);
         return TC_FAIL;
     }
 
-   // MPI_Finalize ();
+    MPI_Finalize ();
     return rc;
 }

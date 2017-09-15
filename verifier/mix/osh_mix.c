@@ -17,9 +17,11 @@
 
 const TE_NODE mix_tcs[] =
 {
+#ifdef HAVE_MPI
     { NULL, osh_mix_tc1,    "start",    aopt_set_string( "tc1" ), 	"Check failure cases calling MPI_Init() and start_pes().", TEST_RUN},
     { NULL, osh_mix_tc2,    "latency",  aopt_set_string( "tc2" ), 	"Latency test as an example of coexistence of OMPI and OSHMEM.",          TEST_RUN},
     { NULL, osh_mix_tc3,    "example",  aopt_set_string( "tc3" ),   "Testing MPI and SHMEM routines together.",          TEST_RUN},
+#endif
     { NULL, NULL,           NULL,	    aopt_set_string( NULL ),    NULL, TEST_IGNORE}
 };
 
