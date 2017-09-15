@@ -23,7 +23,7 @@ AC_CHECK_LIB(oshmem, opal_progress, [CFLAGS="$CFLAGS -DHAVE_OPAL_PROGRESS"],
 			     [AC_MSG_WARN([opal_progress() not found. Some OpenMPI/SHMEM versions require it in data suite.])])
 
 dnl Check oshmem version
-AC_CHECK_LIB([oshmem], [shmem_getmem_nbi],
+AC_CHECK_FUNCS([shmem_getmem_nbi],
     [AM_CONDITIONAL([HAVE_NBI],[true])
      CFLAGS="$CFLAGS -DHAVE_NBI"
     ],
