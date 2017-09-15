@@ -41,7 +41,7 @@ const TE_NODE exec_tst[] =
    { sync_tcs,      proc_tst_sync,      "sync",     aopt_set_string( "sc" ),    "Run " MODULE_NAME " SYNCHRONIZATION test suite.", TEST_RUN},
    { strided_tcs,   proc_tst_strided,   "stride",   aopt_set_string( "st" ),    "Run " MODULE_NAME " STRIDED test suite.", TEST_RUN},
    { mix_tcs,       proc_tst_mix,       "mix",      aopt_set_string( "mx" ),    "Run " MODULE_NAME " MIX test suite.", TEST_RUN},
-   { analysis_tcs,  proc_tst_analysis,  "analysis", aopt_set_string( "an" ),    "Run " MODULE_NAME " ANALYSIS test suite.", TEST_IGNORE},
+   { analysis_tcs,  proc_tst_analysis,  "analysis", aopt_set_string( "an" ),    "Run " MODULE_NAME " ANALYSIS test suite.", TEST_RUN},
    { nbi_tcs,       proc_tst_nbi,       "nbi",      aopt_set_string( "nb" ),    "Run " MODULE_NAME " NB DATA Transfer test suite.", TEST_RUN},
    { misc_tcs,      proc_tst_misc,      "misc",     aopt_set_string( "ms" ),    "Run " MODULE_NAME " AUX test suite.", TEST_RUN},
    { NULL,          NULL,               NULL,       aopt_set_string( NULL ),    NULL }
